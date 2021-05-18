@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script src="https://c-zero.web.app/js/brickjs.js"></script>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+
+    <style>
+         :root {
+            --background-darkest: rgb(23, 30, 36);
+            --background-darker: #192127;
+            --background-dark: #1f2830;
+        }
+        
+        .container-2 {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+        }
+        
+        .sidebar {
+            overflow: hidden;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -ms-flex-negative: 0;
+            flex-shrink: 0;
+            position: relative;
+            background-color: var(--background-dark);
+            position: relative;
+            width: 72px;
+            -ms-flex-negative: 0;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-2 {
+            flex-direction: column;
+            min-height: 0;
+            width: 240px;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            background: var(--background-darker);
+        }
+        
+        @media screen and (max-width: 500px) {
+            .sidebar-2 {
+                width: 120px;
+                display: none;
+            }
+        }
+        
+        .messages {
+            min-width: 0;
+            min-height: 0;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            padding: 10px;
+            width: 80vw;
+        }
+        
+        @media screen and (max-width: 800px) {
+            .messages {
+                width: 80vh;
+            }
+        }
+        
+        @media screen and (max-width: 600px) {
+            #sidebar-2 {
+                display: none;
+            }
+        }
+        
+        .message:hover {
+            transform: scale(1.005);
+        }
+        
+        #messagebox {
+            position: sticky;
+            -ms-flex-negative: 0;
+            flex-shrink: 0;
+            margin-top: -8px;
+            margin: auto;
+        }
+        
+        #messagebox:hover {
+            opacity: 1;
+        }
+        
+        datalist {
+            display: none;
+            /* for browsers that don't already support it */
+        }
+    </style>
+</head>
+
+<body style="height: 100%; display: block; background: var(--background-darkest);">
+    <datalist id="auth_required">true</datalist>
+    <datalist id="page">servers</datalist>
+
+    <div class="container-2">
+        <div class="sidebar menu" id="sidebar">
+            <a style="text-align: center;"><i class="material-icons">home</i></a>
+            <a style="text-align: center;"><i class="material-icons">apps</i></a>
+        </div>
+
+        <div class="sidebar menu sidebar-2" id="channels"></div>
+
+        <div class="messages">
+            <ul style="list-style: none; height: 82vh; overflow: hidden auto;" id="msgs"></ul>
+
+            <ul style="list-style: none;">
+                <li class="card" id="messagebox" style="width: 99%;">
+                    <form style="display: flex;" id="message_form">
+                        <textarea name="msg" style="width: 90%; display: inline; resize: none;"></textarea>
+                        <button style="width: 10vw; display: inline; margin-bottom: 1.2rem; margin-left: 10px;"><i class="material-icons" style="font-size: 3vh;">send</i></button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="firebase/firebase-init.js"></script>
+    <script src="firebase/users/auth.js"></script>
+    <script src="firebase/firestore/data.js"></script>
+
+    <script>
+        // Message Sending
+        const message_form = document.getElementById("message_form")
+        let shift = false
+        document.querySelector("textarea").addEventListener('keydown', e => { // Check for shift submit
+            if (e.key == "Enter") {
+                if (!shift) {
+                    document.querySelector(`#${message_form.id} button`).click() // .submit() ignores preventDefault()
+                }
+            } else if (e.key == "Shift") {
+                shift = true
+
+                setTimeout(() => {
+                    shift = false
+                }, 100);
+            }
+        })
+    </script>
+</body>
+
+</html>

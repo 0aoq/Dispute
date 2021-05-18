@@ -1,0 +1,280 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap");
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    display: grid;
+    place-items: center;
+    font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+    background: #192127;
+}
+
+.container {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: max-content;
+}
+
+.container.fixed {
+    width: 25vw;
+}
+
+@media screen and (max-width: 500px) {
+    .container {
+        width: 80vw;
+    }
+}
+
+input {
+    font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+    color: #f9f9f9;
+    width: 100%;
+    border-radius: 0.2rem;
+    background: rgba(245, 248, 255, 0.05);
+    border: 0.15rem solid transparent;
+    width: 100%;
+    padding: 15px 23px;
+    margin: 8px 0 8px 0;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+input::selection {
+    background: #7a7a7a56;
+}
+
+input:hover {
+    border-color: rgba(245, 248, 255, 0.2);
+}
+
+input::placeholder {
+    color: #393838;
+    user-select: none;
+}
+
+input:hover {
+    border-color: #474aff;
+    box-shadow: 0 0 0 0.4rem rgba(71, 99, 255, 0.15);
+}
+
+input:focus {
+    border-color: #474aff;
+    box-shadow: 0 0 0 0.4rem rgba(71, 99, 255, 0.15);
+}
+
+input:disabled:hover {
+    border-color: #4e4e4e;
+    cursor: text;
+    box-shadow: 0 0 0 0.4rem rgba(66, 68, 78, 0.15);
+}
+
+textarea {
+    font-family: "Open Sans", sans-serif;
+    color: #f9f9f9;
+    width: 100%;
+    border-radius: 0.2rem;
+    background: rgba(245, 248, 255, 0.05);
+    border: 0.15rem solid transparent;
+    width: 100%;
+    padding: 15px 23px;
+    margin: 8px 0 8px 0;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    resize: vertical;
+}
+
+textarea::selection {
+    background: #7a7a7a56;
+}
+
+textarea:hover {
+    border-color: rgba(245, 248, 255, 0.2);
+}
+
+textarea::placeholder {
+    color: #393838;
+    user-select: none;
+}
+
+textarea:hover {
+    border-color: #474aff;
+    box-shadow: 0 0 0 0.4rem rgba(71, 99, 255, 0.15);
+}
+
+textarea:focus {
+    border-color: #474aff;
+    box-shadow: 0 0 0 0.4rem rgba(71, 99, 255, 0.15);
+}
+
+textarea:disabled:hover {
+    border-color: #4e4e4e;
+    cursor: text;
+    box-shadow: 0 0 0 0.4rem rgba(66, 68, 78, 0.15);
+}
+
+
+/* Button */
+
+button {
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: 1rem;
+    user-select: none;
+    margin-top: 1.2rem;
+    padding: 1rem 1.2rem;
+    border-radius: 0.2rem;
+    background: #474aff;
+    border: 0.15rem solid transparent;
+    width: 100%;
+    color: white;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+button:hover {
+    border-color: #474aff;
+    background: #3d40d3;
+    box-shadow: 0 0 0 0.4rem rgba(71, 99, 255, 0.15);
+}
+
+
+/* Card */
+
+.card {
+    padding: 15px 23px;
+    background: rgba(245, 248, 255, 0.05);
+    border: 0.15rem solid transparent;
+    box-sizing: border-box;
+    outline: none;
+    border-radius: 0.2rem;
+    color: white;
+    text-decoration: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s, transform 0.2s;
+}
+
+.card.maxcontent {
+    width: max-content;
+}
+
+.card:hover {
+    border-color: #4e4e4e;
+    box-shadow: 0 0 0 0.4rem rgba(66, 68, 78, 0.15);
+}
+
+
+/* Code */
+
+.hover.primary {
+    font-family: "Open Sans", sans-serif;
+    color: #f9f9f9;
+    border-radius: 0.2rem;
+    background: rgba(245, 248, 255, 0.05);
+    border: 0.15rem solid transparent;
+    width: max-content;
+    padding: 15px 23px;
+    box-sizing: border-box;
+    outline: none;
+    border-color: #474aff;
+    box-shadow: 0 0 0 0.4rem rgba(71, 99, 255, 0.15);
+}
+
+.hover.primary span {
+    font-size: 1.8vh;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: color 0.2s;
+    cursor: pointer;
+}
+
+a:hover {
+    color: #ced0d4;
+}
+
+
+/* Sidebar */
+
+
+/*.sidebar {
+    height: 100%;
+    width: 260px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #1f2830;
+    overflow-x: hidden;
+    padding-top: 20px;
+}*/
+
+body.light .sidebar {
+    background-color: #2d3a46;
+}
+
+.sidebar a:not(.btn) {
+    font-size: 18px;
+    color: lightgray;
+    display: block;
+    padding: 8px;
+    transition: all 0.15s;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+
+.sidebar.menu a:not(.btn) {
+    padding: 15px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+.sidebar.menu a:not(.btn):hover {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.sidebar a:not(.btn):hover {
+    background: #222d35;
+    color: white;
+}
+
+body.light a:not(.btn):hover {
+    background: #28363f;
+}
+
+
+/* Headings */
+
+h1 {
+    margin: 0;
+}
+
+h2 {
+    margin: 0;
+}
+
+h3 {
+    margin: 0;
+}
+
+h4 {
+    margin: 0;
+}
+
+h5 {
+    margin: 0;
+    font-size: 1.2vw;
+}
+
+span {
+    font-size: 1.8vh;
+}
