@@ -81,7 +81,7 @@ auth.onAuthStateChanged((user) => {
             message_form.addEventListener('submit', e => {
                 e.preventDefault()
 
-                if (message_form.msg.value != "" || message_form.msg.value != " " || message_form.msg.value != null || message_form.msg.value != "shitcord bad") {
+                if (!message_form.msg.value == "" && message_form.msg.value == " " && message_form.msg.value == null && message_form.msg.value == "shitcord bad") {
                     db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).get().then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
                             let data = doc.data()
