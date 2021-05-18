@@ -81,21 +81,25 @@ auth.onAuthStateChanged((user) => {
             message_form.addEventListener('submit', e => {
                 e.preventDefault()
 
-                db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).get().then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        let data = doc.data()
+                if (message_form.msg.value != "" || message_form.msg.value != " " || message_form.msg.value != null || message_form.msg.value != "shitcord bad") {
+                    db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            let data = doc.data()
 
-                        if (data.name == user.displayName) {
-                            data.server_verified = true
-                            data.sent.push(message_form.msg.value + "!SHITCORD_STORE/:shitcord_token:yXA?U::/" + getString(8))
-                            db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set(data).then(() => {
-                                console.log("Written data.")
-                            }).catch((error) => {
-                                console.log(error)
-                            })
-                        }
+                            if (data.name == user.displayName) {
+                                data.server_verified = true
+                                data.sent.push(message_form.msg.value + "!SHITCORD_STORE/:shitcord_token:yXA?U::/" + getString(8))
+                                db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set(data).then(() => {
+                                    console.log("Written data.")
+                                }).catch((error) => {
+                                    console.log(error)
+                                })
+                            }
+                        });
                     });
-                });
+
+                    message_form.reset()
+                }
             })
         }
     }
