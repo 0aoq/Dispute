@@ -98,7 +98,9 @@ auth.onAuthStateChanged((user) => {
                         });
                     });
 
-                    message_form.reset()
+                    setTimeout(() => {
+                        message_form.reset()
+                    }, 100);
                 }
             })
         }
