@@ -60,13 +60,14 @@ auth.onAuthStateChanged((user) => {
                         let data = doc.data()
 
                         for (datapoint of data.sent) {
-                            let string = getString(8)
-                            if (!document.getElementById(data.name + ":" + datapoint + ":" + string)) {
+                            let msg = datapoint.split("!SHITCORD_STORE/:shitcord_token:yXA?U::/")[0]
+                            let code = datapoint.split("!SHITCORD_STORE/:shitcord_token:yXA?U::/")[1]
+                            if (!document.getElementById(data.name + ":" + datapoint + ":" + code)) {
                                 document.getElementById("msgs").insertAdjacentHTML("beforeend", `
                 
-                                    <li class="card message" style="margin-top: 5px; width: 99%;" id="${data.name + ":" + datapoint + ":" + string}">
+                                    <li class="card message" style="margin-top: 5px; width: 99%;" id="${data.name + ":" + datapoint + ":" + code}">
                                         <h5 style="display: inline; user-select: none;">${data.name}</h5>
-                                        <span style="margin-left: 20px;">${datapoint}</span>
+                                        <span style="margin-left: 20px;">${msg}</span>
                                     </li>
                             
                                 `)
@@ -86,7 +87,7 @@ auth.onAuthStateChanged((user) => {
 
                         if (data.name == user.displayName) {
                             data.server_verified = true
-                            data.sent.push(message_form.msg.value)
+                            data.sent.push(message_form.msg.value + "!SHITCORD_STORE/:shitcord_token:yXA?U::/" + getString(8))
                             db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set(data).then(() => {
                                 console.log("Written data.")
                             }).catch((error) => {
