@@ -62,18 +62,21 @@ auth.onAuthStateChanged((user) => {
                     querySnapshot.forEach((doc) => {
                         let data = doc.data()
 
-                        for (datapoint of data.sent) {
-                            let msg = datapoint.split("!SHITCORD_STORE/:shitcord_token:yXA?U::/")[0]
-                            let code = datapoint.split("!SHITCORD_STORE/:shitcord_token:yXA?U::/")[1]
-                            if (!document.getElementById(data.name + ":" + datapoint + ":" + code)) {
-                                document.getElementById("msgs").insertAdjacentHTML("beforeend", `
-                
-                                    <li class="card message" style="margin-top: 5px; width: 99%;" id="${data.name + ":" + datapoint + ":" + code}">
-                                        <h5 style="display: inline; user-select: none;">${data.name}</h5>
-                                        <span style="margin-left: 20px;">${msg}</span>
-                                    </li>
-                            
-                                `)
+                        if (doc.id != "info") {
+                            for (datapoint of data.sent) {
+                                let msg = datapoint.split("!SHITCORD_STORE/:shitcord_token:yXA?U::/")[0]
+                                let code = datapoint.split("!SHITCORD_STORE/:shitcord_token:yXA?U::/")[1]
+                                let int = datapoint.split("!SHITCORD_STORE/:shitcord_token:dwA?U::/")[1]
+                                if (!document.getElementById(data.name + ":" + datapoint + ":" + code)) {
+                                    document.getElementById("msgs").insertAdjacentHTML("beforeend", `
+                    
+                                        <li class="card message" style="margin-top: 5px; width: 99%; order: ${int};" id="${data.name + ":" + datapoint + ":" + code}">
+                                            <h5 style="display: inline; user-select: none;">${data.name}</h5>
+                                            <span style="margin-left: 20px;">${msg}</span>
+                                        </li>
+                                
+                                    `)
+                                }
                             }
                         }
                     });
@@ -89,21 +92,31 @@ auth.onAuthStateChanged((user) => {
                         querySnapshot.forEach((doc) => {
                             let data = doc.data()
 
-                            if (data.name == user.displayName) {
-                                data.server_verified = true
-                                data.sent.push(message_form.msg.value + "!SHITCORD_STORE/:shitcord_token:yXA?U::/" + getString(8))
-                                db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set(data).then(() => {
-                                    console.log("Written data.")
-                                }).catch((error) => {
-                                    console.log(error)
-                                })
-                            }
+                            db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).doc("info").get().then((doc) => {
+                                let _data = doc.data()
+
+                                if (data.name == user.displayName) {
+                                    data.server_verified = true
+                                    data.sent.push(message_form.msg.value + "!SHITCORD_STORE/:shitcord_token:yXA?U::/" + getString(8) + "!SHITCORD_STORE/:shitcord_token:dwA?U::/" + _data.total_msgs)
+
+                                    db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set(data).then(() => {
+                                        console.log("Written data.")
+                                    }).catch((error) => {
+                                        console.log(error)
+                                    })
+                                }
+
+                                setTimeout(() => {
+                                    _data.total_msgs = _data.total_msgs + 1
+                                    db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).doc("info").set(_data)
+                                }, 100);
+                            })
                         });
                     });
 
                     setTimeout(() => {
                         message_form.reset()
-                    }, 100);
+                    }, 500);
                 }
             })
         }
