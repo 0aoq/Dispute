@@ -10,6 +10,11 @@ const getString = function(length) {
     return result.join('')
 }
 
+function switch_channel(channel) {
+    window.localStorage.setItem("current_channel", channel)
+    window.location.reload()
+}
+
 auth.onAuthStateChanged((user) => {
     if (user) {
         db.doc("servers/dev").get().then((doc) => {
@@ -17,9 +22,7 @@ auth.onAuthStateChanged((user) => {
 
             for (datapoint of data.channels) {
                 document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                
-                    <a style="display: flex;">${datapoint}</a>
-                        
+                    <a style="display: flex;" onclick="switch_channel('${datapoint}')">#${datapoint}</a> 
                 `)
             }
         })
@@ -80,8 +83,6 @@ auth.onAuthStateChanged((user) => {
 
             message_form.addEventListener('submit', e => {
                 e.preventDefault()
-
-                console.log("mmmmmm")
 
                 if (message_form.msg.value != "" && message_form.msg.value != " " && message_form.msg.value != null && message_form.msg.value != "shitcord bad") {
                     db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).get().then((querySnapshot) => {
