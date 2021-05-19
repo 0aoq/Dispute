@@ -51,18 +51,18 @@ auth.onAuthStateChanged((user) => {
 
         db.collection("servers")
             .onSnapshot((querySnapshot) => {
+                document.getElementById("servers_list").innerHTML = ""
                 querySnapshot.forEach((doc) => {
                     let data = doc.data()
 
                     let code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
                     console.log(doc.id)
-                    if (!document.getElementById(doc.id + "!:DISPUTE_SERVER::GET::!?" + code && doc.id.split("!:DISPUTE_SERVER::GET::!?")[2] == null)) {
-                        document.getElementById("servers_list").innerHTML = ""
+                    if (doc.id.split("!:DISPUTE_SERVER::GET::!?")[2] == null) {
                         for (datapoint of data.users) {
                             if (datapoint == user.uid) { // is the user in the server? uid is unique, displayName isn't.
                                 document.getElementById("servers_list").insertAdjacentHTML("beforeend", `
-                                <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
-                            `)
+                                    <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
+                                `)
                             }
                         }
                     }
@@ -211,16 +211,24 @@ auth.onAuthStateChanged((user) => {
                     channels: [
                         "general"
                     ],
-                    users: []
+                    users: [
+                        user.uid
+                    ]
+                }).then(() => {
+                    console.log("Server created.")
+                }).catch(error => {
+                    console.log(error)
                 })
 
                 db.collection("servers").doc(new_server_name).collection("general").doc("info").set({
                     total_msgs: 0
+                }).then(() => {
+                    window.localStorage.setItem("current_server", new_server_name)
+                    window.localStorage.setItem("current_channel", "general")
+                    window.location.reload()
+                }).catch(erorr => {
+                    console.log(erorr)
                 })
-
-                window.localStorage.setItem("current_server", new_server_name)
-                window.localStorage.setItem("current_channel", "general")
-                window.location.reload()
             })
 
             db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => { // basic permissions
