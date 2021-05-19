@@ -212,6 +212,35 @@
         .panel-1 h4 {
             font-size: 1.5vh;
         }
+        /* Modal */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            place-items: center;
+        }
+        
+        .modal-content {
+            background-color: var(--background-dark);
+            place-self: center;
+            padding: 20px;
+            width: 30%;
+            color: white;
+        }
+        
+        .close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -221,14 +250,7 @@
 
     <div class="container-2">
         <div class="sidebar menu" id="sidebar" style="width: 75px;">
-            <!-- <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon">#</a>
-            <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon">#</a>
-            <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon">#</a>
-            <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon">#</a>
-                
-                TESTING SERVERS HTML, DON'T UNCOMMENT
-        
-            -->
+            <a style="margin: 0;" class="server_icon" onclick="open_server_modal()">New</a>
         </div>
 
         <div class="sidebar menu sidebar-2" id="channels">
@@ -267,6 +289,25 @@
         </div>
     </div>
 
+    <div id="server_modal" class="modal" style="overflow: hidden;">
+        <div class="modal-content">
+            <a class="close" id="server_close">&times;</a>
+            <br>
+            <form id="new_server_form">
+                <h2>Start A Community</h2>
+
+                <p style="color: white; text-align: left;">Server Name</p>
+                <input type="text" name="servername" autocomplete="off">
+
+                <p style="color: white; text-align: left;">Picture URL</p>
+                <input type="url" name="picurl" autocomplete="off" disabled>
+
+                <br>
+                <button>Create</button>
+            </form>
+        </div>
+    </div>
+
     <script src="firebase/firebase-init.js"></script>
     <script src="firebase/users/auth.js"></script>
     <script src="firebase/firestore/data.js"></script>
@@ -288,6 +329,25 @@
                 }, 100);
             }
         })
+
+        // New Server Modal
+
+        let server_modal = document.getElementById("server_modal");
+        var server_close = document.getElementsByClassName("close")[0];
+
+        function open_server_modal() {
+            server_modal.style.display = "grid";
+        }
+
+        server_close.onclick = function() {
+            server_modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == server_modal) {
+                server_modal.style.display = "none";
+            }
+        }
     </script>
 </body>
 
