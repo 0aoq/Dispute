@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server</title>
+    <meta name="favicon">
+    <title>Viewing Dispute</title>
 
     <link rel="stylesheet" href="src/styles.css">
 
     <script src="https://c-zero.web.app/js/brickjs.js"></script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="shortcut icon" type="image/jpg" href="src/dispute_favicon.svg" />
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
@@ -251,7 +253,7 @@
     <div class="container-2">
         <div class="sidebar menu" id="sidebar" style="width: 75px;">
             <a style="margin: 0;" class="server_icon" onclick="open_new_server_modal()">Join</a>
-            <a style="margin: 0;" class="server_icon" onclick="open_server_modal()">New</a>
+            <a style="margin: 0; margin-bottom: 20px;" class="server_icon" onclick="open_server_modal()">New</a>
 
             <div id="servers_list"></div>
         </div>
