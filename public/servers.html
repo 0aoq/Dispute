@@ -367,24 +367,20 @@
         window.onclick = function(event) {
             if (event.target == server_modal) {
                 server_modal.style.display = "none";
+            } else if (event.target == new_server_modal) {
+                new_server_modal.style.display = "none";
             }
         }
 
         let new_server_modal = document.getElementById("join_server_modal");
-        var new_server_close = document.getElementsByClassName("close")[1];
+        var new_server_close = document.getElementById("join_server_close");
 
         function open_new_server_modal() {
             new_server_modal.style.display = "grid";
         }
 
-        server_close.onclick = function() {
+        new_server_close.onclick = function() {
             new_server_modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == server_modal) {
-                new_server_modal.style.display = "none";
-            }
         }
     </script>
 </body>
