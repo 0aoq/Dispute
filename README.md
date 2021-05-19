@@ -7,5 +7,5 @@ Need help? Join the main Dispute server with code `X6!uo1vX?ZAB`
 
 ## To Use:
 Download code as zip (or clone) and extract (if zip).
-Open index.html (servers.html will redirect to index), and create an account/login.
+Open public/index.html (public/servers.html will redirect to auth), and create an account/login.
 That's it.
