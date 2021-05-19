@@ -57,9 +57,10 @@ auth.onAuthStateChanged((user) => {
                     let code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
                     console.log(doc.id)
                     if (!document.getElementById(doc.id + "!:DISPUTE_SERVER::GET::!?" + code && doc.id.split("!:DISPUTE_SERVER::GET::!?")[2] == null)) {
+                        document.getElementById("servers_list").innerHTML = ""
                         for (datapoint of data.users) {
                             if (datapoint == user.uid) { // is the user in the server? uid is unique, displayName isn't.
-                                document.getElementById("sidebar").insertAdjacentHTML("beforeend", `
+                                document.getElementById("servers_list").insertAdjacentHTML("beforeend", `
                                 <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
                             `)
                             }
@@ -85,6 +86,7 @@ auth.onAuthStateChanged((user) => {
             db.collection("servers").doc(window.localStorage.getItem("current_server"))
                 .onSnapshot((doc) => {
                     let data = doc.data()
+                    document.getElementById("channels").innerHTML = ""
 
                     console.log(data)
                     for (datapoint of data.channels) {
@@ -93,8 +95,8 @@ auth.onAuthStateChanged((user) => {
 
                         if (!document.getElementById(channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code && datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[2] == null)) {
                             document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                            <a style="display: flex;" onclick="switch_channel('${datapoint}')" id="${code}">#${channel_name}</a> 
-                        `)
+                                <a style="display: flex;" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code}">#${channel_name}</a> 
+                            `)
                         }
                     }
                 })
