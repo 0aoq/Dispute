@@ -68,7 +68,7 @@ auth.onAuthStateChanged((user) => {
                                 let msg = datapoint.split("!SHITCORD_STORE/:shitcord_token:yXA?U::/")[0]
                                 let code = datapoint.split("!SHITCORD_STORE/:shitcord_token:yXA?U::/")[1]
                                 let int = datapoint.split("!SHITCORD_STORE/:shitcord_token:dwA?U::/")[1]
-                                if (!document.getElementById(data.name + ":" + datapoint + ":" + code)) {
+                                if (!document.getElementById(data.name + ":" + datapoint + ":" + code) && datapoint.split("!SHITCORD_STORE/:shitcord_token:yXA?U::/")[2] == null) {
                                     document.getElementById("msgs").insertAdjacentHTML("beforeend", `
                     
                                         <li class="card message" style="margin-top: 5px; width: 99%; order: ${int};" id="${data.name + ":" + datapoint + ":" + code}">
