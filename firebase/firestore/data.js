@@ -23,9 +23,45 @@ function switch_server(server) {
 
 auth.onAuthStateChanged((user) => {
     if (user) {
-        if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel") && window.localStorage.getItem("current_server") != null) {
+        // Server Joining
+        console.log(user.uid)
+        const join_server_form = document.getElementById("join_server_form")
+
+        join_server_form.addEventListener('submit', e => {
+            e.preventDefault()
+
+            console.log("submit")
+            db.collection("servers").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data()
+                    let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
+
+                    if (doc_code == join_server_form.servercode.value) {
+                        data.users.push(user.uid)
+                        db.collection("servers").doc(doc.id).set(data).then(() => {
+                            console.log("Written data.")
+                            window.location.reload()
+                        }).catch(error => {
+                            console.log(error)
+                        })
+                    }
+                })
+            })
+        })
+
+        if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel") && window.localStorage.getItem("current_server")) {
             document.getElementById("server_info__channel_name").innerText = "#" + window.localStorage.getItem("current_channel").split("!:DISPUTE_CHANNEL::GET::!?")[0]
             document.getElementById("server_name").innerText = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0]
+
+            document.getElementById("server_name").addEventListener('click', () => {
+                document.getElementById("copy_server_code").style.display = "block"
+                document.getElementById("copy_server_code").value = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[1]
+                document.getElementById("copy_server_code").select()
+                document.getElementById("copy_server_code").setSelectionRange(0, 99999)
+                document.execCommand("copy")
+                document.getElementById("copy_server_code").style.display = "none"
+                alert("Copied Server Code: " + document.getElementById("copy_server_code").value)
+            })
 
             db.collection("servers")
                 .onSnapshot((querySnapshot) => {
@@ -193,34 +229,6 @@ auth.onAuthStateChanged((user) => {
                     console.log("The currently signed in user is the owner of the current server they are in.")
                 }
             })
-
-            // Server Joining
-
-            const join_server_form = document.getElementById("join_server_form")
-
-            join_server_form.addEventListener('submit', e => {
-                e.preventDefault()
-
-                console.log("submit")
-                db.collection("servers").get().then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        let data = doc.data()
-                        let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
-
-                        if (doc_code == join_server_form.servercode.value) {
-                            data.users.push(user.uid)
-                            db.collection("servers").doc(doc.id).set(data).then(() => {
-                                console.log("Written data.")
-                                window.location.reload()
-                            }).catch(error => {
-                                console.log(error)
-                            })
-                        }
-                    })
-                })
-            })
-        } else {
-            document.getElementById("join_server_modal").style.display = "block"
         }
     }
 });
