@@ -141,6 +141,27 @@
             margin-bottom: 20px;
         }
         
+        #sidebar {
+            transition: all 0.2s;
+        }
+        
+        #sidebar a {
+            position: relative;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
+        
+        .server_icon {
+            background-size: cover;
+            background-position: center;
+            -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
+            box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
+        }
+        
         @media screen and (max-width: 800px) {
             .messages {
                 width: max-content;
@@ -170,6 +191,27 @@
             padding: 8px;
             height: auto;
         }
+        
+        .panel-1 {
+            height: 52px;
+            font-size: 14px;
+            font-weight: 500;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            margin-bottom: 1px;
+            position: absolute;
+            bottom: 0;
+            background: var(--background-dark);
+            width: 100%;
+            color: white;
+        }
+        
+        .panel-1 h4 {
+            font-size: 1.5vh;
+        }
     </style>
 </head>
 
@@ -178,9 +220,15 @@
     <datalist id="page">servers</datalist>
 
     <div class="container-2">
-        <div class="sidebar menu" id="sidebar">
-            <a style="text-align: center;"><i class="material-icons">home</i></a>
-            <a style="text-align: center;"><i class="material-icons">apps</i></a>
+        <div class="sidebar menu" id="sidebar" style="width: 75px;">
+            <!-- <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon">#</a>
+            <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon">#</a>
+            <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon">#</a>
+            <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon">#</a>
+                
+                TESTING SERVERS HTML, DON'T UNCOMMENT
+        
+            -->
         </div>
 
         <div class="sidebar menu sidebar-2" id="channels">
@@ -194,6 +242,11 @@
                     <button>Create</button>
                 </form>
             </a>
+
+            <div class="panel-1" aria-label="user_section" id="user_info">
+                <h4>user.displayName</h4>
+                <a aria-label="sign_out" class="btn" style="margin-left: 15px;">Sign Out</a>
+            </div>
         </div>
 
         <div id="server_info" class="sidebar menu" style="background: none;">
