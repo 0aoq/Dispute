@@ -51,6 +51,11 @@ auth.onAuthStateChanged((user) => {
             setTimeout(() => {
                 window.location = "servers.html"
             }, 100);
+        } else if (document.getElementById("page").innerHTML == "servers") {
+            document.querySelector("#user_info h4").innerText = user.displayName
+            document.querySelector("#user_info a").addEventListener('click', () => {
+                auth.signOut()
+            })
         }
     } else {
         console.log("User is not signed in.")
