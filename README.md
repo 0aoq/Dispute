@@ -1,6 +1,6 @@
 # Dispute
 
-A discord-clone. Dispute currently provides channel and servers and server creation, channel creation, and messages.
+A discord-clone. Dispute currently supports servers and server creation, channels and channel creation, and messages.
 
 ## To Use:
 Download code as zip (or clone) and extract (if zip).
