@@ -49,6 +49,25 @@ auth.onAuthStateChanged((user) => {
             })
         })
 
+        db.collection("servers")
+            .onSnapshot((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data()
+
+                    let code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
+                    console.log(doc.id)
+                    if (!document.getElementById(doc.id + "!:DISPUTE_SERVER::GET::!?" + code && doc.id.split("!:DISPUTE_SERVER::GET::!?")[2] == null)) {
+                        for (datapoint of data.users) {
+                            if (datapoint == user.uid) { // is the user in the server? uid is unique, displayName isn't.
+                                document.getElementById("sidebar").insertAdjacentHTML("beforeend", `
+                                <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
+                            `)
+                            }
+                        }
+                    }
+                })
+            })
+
         if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel") && window.localStorage.getItem("current_server")) {
             document.getElementById("server_info__channel_name").innerText = "#" + window.localStorage.getItem("current_channel").split("!:DISPUTE_CHANNEL::GET::!?")[0]
             document.getElementById("server_name").innerText = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0]
@@ -62,25 +81,6 @@ auth.onAuthStateChanged((user) => {
                 document.getElementById("copy_server_code").style.display = "none"
                 alert("Copied Server Code: " + document.getElementById("copy_server_code").value)
             })
-
-            db.collection("servers")
-                .onSnapshot((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        let data = doc.data()
-
-                        let code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
-                        console.log(doc.id)
-                        if (!document.getElementById(doc.id + "!:DISPUTE_SERVER::GET::!?" + code && doc.id.split("!:DISPUTE_SERVER::GET::!?")[2] == null)) {
-                            for (datapoint of data.users) {
-                                if (datapoint == user.uid) { // is the user in the server? uid is unique, displayName isn't.
-                                    document.getElementById("sidebar").insertAdjacentHTML("beforeend", `
-                                        <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
-                                    `)
-                                }
-                            }
-                        }
-                    })
-                })
 
             db.collection("servers").doc(window.localStorage.getItem("current_server"))
                 .onSnapshot((doc) => {
