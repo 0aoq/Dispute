@@ -1,5 +1,15 @@
 var auth = firebase.auth()
 
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(() => {
+        console.log("Auth setPersistence")
+    })
+    .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode, errorMessage)
+    });
+
 if (document.getElementById("page").innerHTML == "auth") {
     document.getElementById("signupform").addEventListener('submit', e => {
         e.preventDefault()
