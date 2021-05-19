@@ -1,392 +1,245 @@
-<!DOCTYPE html>
-<html lang="en">
+const db = firebase.firestore()
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server</title>
+const getString = function(length) {
+    let result = []
+    let characters = '!?@!??!!?@!?#$%@!?#ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let charactersLength = characters.length
+    for (let i = 0; i < length; i++) {
+        result.push(characters.charAt(Math.floor(Math.random() * charactersLength)))
+    }
+    return result.join('')
+}
 
-    <link rel="stylesheet" href="styles.css">
+function switch_channel(channel) {
+    window.localStorage.setItem("current_channel", channel)
+    window.location.reload()
+}
 
-    <script src="https://c-zero.web.app/js/brickjs.js"></script>
+function switch_server(server) {
+    window.localStorage.setItem("current_server", server)
+    window.localStorage.setItem("current_channel", "general")
+    window.location.reload()
+}
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // Server Joining
+        console.log(user.uid)
+        const join_server_form = document.getElementById("join_server_form")
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+        join_server_form.addEventListener('submit', e => {
+            e.preventDefault()
 
-    <style>
-         :root {
-            --background-darkest: rgb(23, 30, 36);
-            --background-darker: #192127;
-            --background-dark: #1f2830;
-        }
-        
-        .container-2 {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-        }
-        
-        .sidebar {
-            overflow: hidden;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-orient: vertical;
-            -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            -ms-flex-negative: 0;
-            flex-shrink: 0;
-            position: relative;
-            background-color: var(--background-dark);
-            position: relative;
-            width: 72px;
-            -ms-flex-negative: 0;
-            flex-shrink: 0;
-        }
-        
-        .sidebar-2 {
-            flex-direction: column;
-            min-height: 0;
-            width: 240px;
-            -webkit-box-flex: 0;
-            -ms-flex: 0 0 auto;
-            flex: 0 0 auto;
-            background: var(--background-darker);
-        }
-        
-        @media screen and (max-width: 500px) {
-            .sidebar-2 {
-                width: 120px;
-                display: none;
-            }
-        }
-        
-        .messages {
-            min-width: 0;
-            min-height: 0;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-orient: vertical;
-            -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            position: absolute;
-            overflow: hidden;
-            padding: 10px;
-            height: 95vh;
-            margin-left: -30px;
-            width: calc(90vw - 150px);
-            margin-top: 40px;
-        }
-        
-        #msgs {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .message:hover {
-            transform: scale(1.005);
-        }
-        
-        #messagebox {
-            position: sticky;
-            -ms-flex-negative: 0;
-            flex-shrink: 0;
-            margin-top: -8px;
-            margin: auto;
-        }
-        
-        #messagebox:hover {
-            opacity: 1;
-        }
-        
-        datalist {
-            display: none;
-            /* for browsers that don't already support it */
-        }
-        
-        #server_name {
-            -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
-            box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
-            background: var(--background-dark);
-            margin-bottom: 20px;
-        }
-        
-        #server_info {
-            flex-direction: column;
-            min-height: 0;
-            -webkit-box-flex: 0;
-            -ms-flex: 0 0 auto;
-            flex: 0 0 auto;
-            width: 100%;
-            right: 0;
-        }
-        
-        #server_info__channel_name {
-            -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
-            box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
-            background: var(--background-dark);
-            margin-bottom: 20px;
-        }
-        
-        #sidebar {
-            transition: all 0.2s;
-        }
-        
-        #sidebar a {
-            position: relative;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-pack: center;
-            -ms-flex-pack: center;
-            justify-content: center;
-        }
-        
-        .server_icon {
-            background-size: cover;
-            background-position: center;
-            -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
-            box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
-        }
-        
-        @media screen and (max-width: 800px) {
-            .messages {
-                width: max-content;
-            }
-            #sidebar-2 {
-                display: none;
-            }
-            #server_info {
-                width: 83.5vw;
-            }
-        }
-        
-        @media screen and (max-width: 500px) {
-            .messages {
-                width: 80vw;
-            }
-        }
-        
-        @media screen and (min-width: 1500px) {
-            #server_info {
-                width: 83.8vw;
-            }
-        }
-        
-        a.no_effect:hover {
-            transform: scale(1.0);
-            padding: 8px;
-            height: auto;
-        }
-        
-        .panel-1 {
-            height: 52px;
-            font-size: 14px;
-            font-weight: 500;
-            -webkit-box-align: center;
-            -ms-flex-align: center;
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-            margin-bottom: 1px;
-            position: absolute;
-            bottom: 0;
-            background: var(--background-dark);
-            width: 100%;
-            color: white;
-        }
-        
-        .panel-1 h4 {
-            font-size: 1.5vh;
-        }
-        /* Modal */
-        
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.4);
-            place-items: center;
-        }
-        
-        .modal-content {
-            background-color: var(--background-dark);
-            place-self: center;
-            padding: 20px;
-            width: 30%;
-            color: white;
-        }
-        
-        .close {
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-    </style>
-</head>
+            console.log("submit")
+            db.collection("servers").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data()
+                    let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
 
-<body style="height: 100%; display: block; background: var(--background-darkest);">
-    <datalist id="auth_required">true</datalist>
-    <datalist id="page">servers</datalist>
-    <input type="text" style="display: none;" id="copy_server_code">
-    <div class="container-2">
-        <div class="sidebar menu" id="sidebar" style="width: 75px;">
-            <a style="margin: 0;" class="server_icon" onclick="open_new_server_modal()">Join</a>
-            <a style="margin: 0;" class="server_icon" onclick="open_server_modal()">New</a>
-
-            <div id="servers_list"></div>
-        </div>
-
-        <div class="sidebar menu sidebar-2">
-            <a id="server_name">Loading...</a>
-
-            <a id="newchannel">Make Channel</a>
-            <a id="newchannel__form" style="display: none;">
-                <form id="newchannel__form_set">
-                    <p>Name</p>
-                    <input type="text" name="channel" autocomplete="off">
-                    <button>Create</button>
-                </form>
-            </a>
-
-            <div id="channels"></div>
-
-            <div class="panel-1" aria-label="user_section" id="user_info">
-                <h4>Loading...</h4>
-                <a aria-label="sign_out" class="btn" style="margin-left: 15px;">Sign Out</a>
-            </div>
-        </div>
-
-        <div id="server_info" class="sidebar menu" style="background: none;">
-            <a id="server_info__channel_name" class="no_effect">Loading...</a>
-
-            <div class="messages">
-                <ul style="list-style: none; height: 82vh; overflow: hidden auto;" id="msgs"></ul>
-
-                <ul style="list-style: none;">
-                    <li class="card" id="messagebox" style="width: 99%;">
-                        <form style="display: flex;" id="message_form">
-                            <textarea name="msg" style="width: 90%; display: inline; resize: none;"></textarea>
-                            <button style="width: 10vw; display: inline; margin-bottom: 1.2rem; margin-left: 10px;"><i class="material-icons" style="font-size: 3vh;">send</i></button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div id="server_modal" class="modal" style="overflow: hidden;">
-        <div class="modal-content">
-            <a class="close" id="server_close">&times;</a>
-            <br>
-            <form id="new_server_form">
-                <h2>Start A Community</h2>
-
-                <p style="color: white; text-align: left;">Server Name</p>
-                <input type="text" name="servername" autocomplete="off">
-
-                <p style="color: white; text-align: left;">Picture URL</p>
-                <input type="url" name="picurl" autocomplete="off" disabled>
-
-                <br>
-                <button>Create</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="join_server_modal" class="modal" style="overflow: hidden;">
-        <div class="modal-content">
-            <a class="close" id="join_server_close">&times;</a>
-            <br>
-            <form id="join_server_form">
-                <h2>Join A Community</h2>
-
-                <p style="color: white; text-align: left;">Server Code</p>
-                <input type="text" name="servercode" autocomplete="off">
-
-                <br>
-                <button>Join</button>
-            </form>
-        </div>
-    </div>
-
-    <script src="firebase/firebase-init.js"></script>
-    <script src="firebase/users/auth.js"></script>
-    <script src="firebase/firestore/data.js"></script>
-
-    <script>
-        // Message Sending
-        const message_form = document.getElementById("message_form")
-        let shift = false
-        document.querySelector("textarea").addEventListener('keydown', e => { // Check for shift submit
-            if (e.key == "Enter") {
-                if (!shift) {
-                    document.querySelector(`#${message_form.id} button`).click() // .submit() ignores preventDefault()
-                }
-            } else if (e.key == "Shift") {
-                shift = true
-
-                setTimeout(() => {
-                    shift = false
-                }, 100);
-            }
+                    if (doc_code == join_server_form.servercode.value) {
+                        data.users.push(user.uid)
+                        db.collection("servers").doc(doc.id).set(data).then(() => {
+                            console.log("Written data.")
+                            window.location.reload()
+                        }).catch(error => {
+                            console.log(error)
+                        })
+                    }
+                })
+            })
         })
 
-        // New Server Modal
+        db.collection("servers")
+            .onSnapshot((querySnapshot) => {
+                document.getElementById("servers_list").innerHTML = ""
+                querySnapshot.forEach((doc) => {
+                    let data = doc.data()
 
-        let server_modal = document.getElementById("server_modal");
-        var server_close = document.getElementsByClassName("close")[0];
+                    let code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
+                    console.log(doc.id)
+                    if (doc.id.split("!:DISPUTE_SERVER::GET::!?")[2] == null) {
+                        for (datapoint of data.users) {
+                            if (datapoint == user.uid) { // is the user in the server? uid is unique, displayName isn't.
+                                document.getElementById("servers_list").insertAdjacentHTML("beforeend", `
+                                    <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
+                                `)
+                            }
+                        }
+                    }
+                })
+            })
 
-        function open_server_modal() {
-            server_modal.style.display = "grid";
+        if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel") && window.localStorage.getItem("current_server")) {
+            document.getElementById("server_info__channel_name").innerText = "#" + window.localStorage.getItem("current_channel").split("!:DISPUTE_CHANNEL::GET::!?")[0]
+            document.getElementById("server_name").innerText = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0]
+            document.title = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0] + " - On Dispute"
+
+            document.getElementById("server_name").addEventListener('click', () => {
+                document.getElementById("copy_server_code").style.display = "block"
+                document.getElementById("copy_server_code").value = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[1]
+                document.getElementById("copy_server_code").select()
+                document.getElementById("copy_server_code").setSelectionRange(0, 99999)
+                document.execCommand("copy")
+                document.getElementById("copy_server_code").style.display = "none"
+                alert("Copied Server Code: " + document.getElementById("copy_server_code").value)
+            })
+
+            db.collection("servers").doc(window.localStorage.getItem("current_server"))
+                .onSnapshot((doc) => {
+                    let data = doc.data()
+                    document.getElementById("channels").innerHTML = ""
+
+                    console.log(data)
+                    for (datapoint of data.channels) {
+                        let channel_name = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[0]
+                        let code = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[1]
+
+                        if (!document.getElementById(channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code && datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[2] == null)) {
+                            document.getElementById("channels").insertAdjacentHTML("beforeend", `
+                                <a style="display: flex;" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code}">#${channel_name}</a> 
+                            `)
+                        }
+                    }
+                })
+
+            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).get().then((doc) => {
+                if (doc.exists) {
+                    console.log("Document data:", doc.data());
+                } else {
+                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set({
+                        name: user.displayName,
+                        server_verified: false,
+                        sent: []
+                    })
+                }
+            })
+
+            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`)
+                .onSnapshot((querySnapshot) => { // Add real time support
+                    querySnapshot.forEach((doc) => {
+                        let data = doc.data()
+
+                        if (doc.id != "info") {
+                            for (datapoint of data.sent) {
+                                let msg = datapoint.split("!DISPUTE_STORE/dispute_token:yXA?U::/")[0]
+                                let code = datapoint.split("!DISPUTE_STORE/dispute_token:yXA?U::/")[1]
+                                let int = datapoint.split("!DISPUTE_STORE/dispute_token:dwA?U::/")[1]
+                                if (!document.getElementById(data.name + ":" + datapoint + ":" + code) && datapoint.split("!DISPUTE_STORE/dispute_token:yXA?U::/")[2] == null) {
+                                    document.getElementById("msgs").insertAdjacentHTML("beforeend", `
+                    
+                                        <li class="card message" style="margin-top: 5px; width: 99%; order: ${int};" id="${data.name + ":" + datapoint + ":" + code}">
+                                            <h5 style="display: inline; user-select: none;">${data.name}</h5>
+                                            <span style="margin-left: 20px;">${msg}</span>
+                                        </li>
+                                
+                                    `)
+                                }
+                            }
+                        }
+                    });
+                }, (error) => {
+                    console.log(error)
+                });
+
+            message_form.addEventListener('submit', e => {
+                e.preventDefault()
+
+                if (message_form.msg.value != "" && message_form.msg.value != " " && message_form.msg.value != null && message_form.msg.value) {
+                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            let data = doc.data()
+
+                            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").get().then((doc) => {
+                                let _data = doc.data()
+
+                                if (data.name == user.displayName) {
+                                    data.server_verified = true
+                                    data.sent.push(message_form.msg.value + "!DISPUTE_STORE/dispute_token:yXA?U::/" + getString(8) + "!DISPUTE_STORE/dispute_token:dwA?U::/" + _data.total_msgs)
+
+                                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set(data).then(() => {
+                                        console.log("Written data.")
+                                    }).catch((error) => {
+                                        console.log(error)
+                                    })
+                                }
+
+                                setTimeout(() => {
+                                    _data.total_msgs = _data.total_msgs + 1
+                                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").set(_data)
+                                }, 100);
+                            })
+                        });
+                    });
+
+                    setTimeout(() => {
+                        message_form.reset()
+                    }, 500);
+                }
+            })
+
+            document.getElementById("newchannel").addEventListener('click', () => {
+                if (document.getElementById("newchannel__form").style.display == "block") {
+                    document.getElementById("newchannel__form").style.display = "none"
+                } else {
+                    document.getElementById("newchannel__form").style.display = "block"
+                }
+            })
+
+            document.getElementById("newchannel__form_set").addEventListener('submit', e => {
+                e.preventDefault()
+
+                let channelname = document.getElementById("newchannel__form_set").channel.value + "!:DISPUTE_CHANNEL::GET::!?" + getString(10)
+                db.collection(`servers/${window.localStorage.getItem("current_server")}/${channelname}`).doc("info").set({
+                    total_msgs: 0
+                })
+
+                db.doc(`servers/${window.localStorage.getItem("current_server")}`).get().then((doc) => {
+                    let data = doc.data()
+                    data.channels.push(channelname)
+                    db.collection("servers").doc(window.localStorage.getItem("current_server")).set(data)
+                })
+            })
+
+            // Server Creation
+
+            const new_server_form = document.getElementById("new_server_form")
+
+            new_server_form.addEventListener('submit', e => {
+                e.preventDefault()
+
+                let new_server_name = new_server_form.servername.value + "!:DISPUTE_SERVER::GET::!?" + getString(12)
+                db.collection("servers").doc(new_server_name).set({
+                    channels: [
+                        "general"
+                    ],
+                    users: [
+                        user.uid
+                    ]
+                }).then(() => {
+                    console.log("Server created.")
+                }).catch(error => {
+                    console.log(error)
+                })
+
+                db.collection("servers").doc(new_server_name).collection("general").doc("info").set({
+                    total_msgs: 0
+                }).then(() => {
+                    window.localStorage.setItem("current_server", new_server_name)
+                    window.localStorage.setItem("current_channel", "general")
+                    window.location.reload()
+                }).catch(erorr => {
+                    console.log(erorr)
+                })
+            })
+
+            db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => { // basic permissions
+                let data = doc.data()
+                if (user.uid != data.owner) {
+                    document.querySelector("#newchannel").style.display = "none"
+                } else {
+                    console.log("The currently signed in user is the owner of the current server they are in.")
+                }
+            })
         }
-
-        server_close.onclick = function() {
-            server_modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == server_modal) {
-                server_modal.style.display = "none";
-            }
-        }
-
-        let new_server_modal = document.getElementById("join_server_modal");
-        var new_server_close = document.getElementsByClassName("close")[1];
-
-        function open_new_server_modal() {
-            new_server_modal.style.display = "grid";
-        }
-
-        server_close.onclick = function() {
-            new_server_modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == server_modal) {
-                new_server_modal.style.display = "none";
-            }
-        }
-    </script>
-</body>
-
-</html>
+    }
+});
