@@ -1,13 +1,13 @@
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 var firebaseConfig = {
-    apiKey: "AIzaSyAAOyAAbch9EmZxTg8fL8UgoEY7LS5-dCY",
-    authDomain: "discord-clone-72e4d.firebaseapp.com",
-    projectId: "discord-clone-72e4d",
-    storageBucket: "discord-clone-72e4d.appspot.com",
-    messagingSenderId: "7975109971",
-    appId: "1:7975109971:web:124341b66dc5a4a4fc8da6",
-    measurementId: "G-M0RYZWQMBR"
+    apiKey: "AIzaSyAC-q2flKiFh-6GRaaodQlXDCk_GEiS0lY",
+    authDomain: "dispute-app.firebaseapp.com",
+    projectId: "dispute-app",
+    storageBucket: "dispute-app.appspot.com",
+    messagingSenderId: "230482683943",
+    appId: "1:230482683943:web:11a4db661daa4e9b7c8602",
+    measurementId: "G-H77G2VWSS5"
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
