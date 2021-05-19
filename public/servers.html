@@ -384,6 +384,36 @@
         new_server_close.onclick = function() {
             new_server_modal.style.display = "none";
         }
+
+        // Invites
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                let id = window.location.search.slice(1)
+
+                if (id) {
+                    console.log("joined")
+                    db.collection("servers").get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            let data = doc.data()
+                            let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
+
+                            if (doc_code == id) {
+                                data.users.push(user.uid)
+                                db.collection("servers").doc(doc.id).set(data).then(() => {
+                                    console.log("Written data.")
+                                    window.localStorage.setItem("current_server", doc.id)
+                                    window.localStorage.setItem("current_channel", "general")
+                                    window.location = "servers.html"
+                                }).catch(error => {
+                                    console.log(error)
+                                })
+                            }
+                        })
+                    })
+                }
+            }
+        });
     </script>
 </body>
 
