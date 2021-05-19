@@ -59,12 +59,12 @@ input::placeholder {
 
 input:hover {
     border-color: #ff4747;
-    box-shadow: 0 0 0 0.4rem rgba(71, 99, 255, 0.15);
+    box-shadow: 0 0 0 0.4rem rgba(255, 71, 71, 0.15);
 }
 
 input:focus {
     border-color: #ff4747;
-    box-shadow: 0 0 0 0.4rem rgba(71, 99, 255, 0.15);
+    box-shadow: 0 0 0 0.4rem rgba(255, 71, 71, 0.15);
 }
 
 input:disabled:hover {
