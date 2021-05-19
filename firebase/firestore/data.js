@@ -23,51 +23,58 @@ function switch_server(server) {
 
 auth.onAuthStateChanged((user) => {
     if (user) {
-        db.collection("servers").doc(window.localStorage.getItem("current_server"))
-            .onSnapshot((doc) => {
-                let data = doc.data()
+        if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel") && window.localStorage.getItem("current_server") != null) {
+            document.getElementById("server_info__channel_name").innerText = "#" + window.localStorage.getItem("current_channel").split("!:DISPUTE_CHANNEL::GET::!?")[0]
+            document.getElementById("server_name").innerText = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0]
 
-                for (datapoint of data.channels) {
-                    let channel_name = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[0]
-                    let code = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[1]
+            db.collection("servers")
+                .onSnapshot((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        let data = doc.data()
 
-                    if (!document.getElementById(channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code && datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[2] == null)) {
-                        document.getElementById("channels").insertAdjacentHTML("beforeend", `
+                        let code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
+                        console.log(doc.id)
+                        if (!document.getElementById(doc.id + "!:DISPUTE_SERVER::GET::!?" + code && doc.id.split("!:DISPUTE_SERVER::GET::!?")[2] == null)) {
+                            for (datapoint of data.users) {
+                                if (datapoint == user.uid) { // is the user in the server? uid is unique, displayName isn't.
+                                    document.getElementById("sidebar").insertAdjacentHTML("beforeend", `
+                                        <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
+                                    `)
+                                }
+                            }
+                        }
+                    })
+                })
+
+            db.collection("servers").doc(window.localStorage.getItem("current_server"))
+                .onSnapshot((doc) => {
+                    let data = doc.data()
+
+                    console.log(data)
+                    for (datapoint of data.channels) {
+                        let channel_name = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[0]
+                        let code = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[1]
+
+                        if (!document.getElementById(channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code && datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[2] == null)) {
+                            document.getElementById("channels").insertAdjacentHTML("beforeend", `
                             <a style="display: flex;" onclick="switch_channel('${datapoint}')" id="${code}">#${channel_name}</a> 
                         `)
+                        }
                     }
+                })
+
+            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).get().then((doc) => {
+                if (doc.exists) {
+                    console.log("Document data:", doc.data());
+                } else {
+                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set({
+                        name: user.displayName,
+                        server_verified: false,
+                        sent: []
+                    })
                 }
             })
 
-        db.collection("servers")
-            .onSnapshot((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data()
-
-                    let code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
-                    if (!document.getElementById(doc.id + "!:DISPUTE_SERVER::GET::!?" + code && doc.id.split("!:DISPUTE_SERVER::GET::!?")[2] == null)) {
-                        document.getElementById("sidebar").insertAdjacentHTML("beforeend", `
-                            <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon" onclick="switch_server('${doc.id}')">#</a>
-                        `)
-                    }
-                })
-            })
-
-        db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).get().then((doc) => {
-            if (doc.exists) {
-                console.log("Document data:", doc.data());
-            } else {
-                db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set({
-                    name: user.displayName,
-                    server_verified: false,
-                    sent: []
-                })
-            }
-        })
-
-        if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel") && window.localStorage.getItem("current_server")) {
-            document.getElementById("server_info__channel_name").innerText = "#" + window.localStorage.getItem("current_channel");
-            document.getElementById("server_name").innerText = window.localStorage.getItem("current_server");
             db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`)
                 .onSnapshot((querySnapshot) => { // Add real time support
                     querySnapshot.forEach((doc) => {
@@ -165,17 +172,55 @@ auth.onAuthStateChanged((user) => {
                 db.collection("servers").doc(new_server_name).set({
                     channels: [
                         "general"
-                    ]
+                    ],
+                    users: []
                 })
 
                 db.collection("servers").doc(new_server_name).collection("general").doc("info").set({
                     total_msgs: 0
                 })
+
+                window.localStorage.setItem("current_server", new_server_name)
+                window.localStorage.setItem("current_channel", "general")
+                window.location.reload()
+            })
+
+            db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => { // basic permissions
+                let data = doc.data()
+                if (user.uid != data.owner) {
+                    document.querySelector("#newchannel").style.display = "none"
+                } else {
+                    console.log("The currently signed in user is the owner of the current server they are in.")
+                }
+            })
+
+            // Server Joining
+
+            const join_server_form = document.getElementById("join_server_form")
+
+            join_server_form.addEventListener('submit', e => {
+                e.preventDefault()
+
+                console.log("submit")
+                db.collection("servers").get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        let data = doc.data()
+                        let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
+
+                        if (doc_code == join_server_form.servercode.value) {
+                            data.users.push(user.uid)
+                            db.collection("servers").doc(doc.id).set(data).then(() => {
+                                console.log("Written data.")
+                                window.location.reload()
+                            }).catch(error => {
+                                console.log(error)
+                            })
+                        }
+                    })
+                })
             })
         } else {
-            window.localStorage.setItem("current_channel", "general")
-            window.localStorage.setItem("current_server", "dev")
-            window.reload()
+            document.getElementById("join_server_modal").style.display = "block"
         }
     }
 });
