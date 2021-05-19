@@ -40,6 +40,7 @@ auth.onAuthStateChanged((user) => {
         })
 
         if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel")) {
+            document.getElementById("server_info__channel_name").innerText = "#" + window.localStorage.getItem("current_channel");
             /* db.collection("servers/dev/general").get().then((querySnapshot) => { // DO NOT USE : NOT REALTIME : DOESN'T SUPPORT MULTIPLE CHANNELS
                 querySnapshot.forEach((doc) => {
                     let data = doc.data()
