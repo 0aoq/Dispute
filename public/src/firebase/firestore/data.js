@@ -40,7 +40,6 @@ auth.onAuthStateChanged((user) => {
                         data.users.push(user.uid)
                         db.collection("servers").doc(doc.id).set(data).then(() => {
                             console.log("Written data.")
-                            window.location.reload()
                         }).catch(error => {
                             console.log(error)
                         })
