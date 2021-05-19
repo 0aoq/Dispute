@@ -72,6 +72,7 @@ auth.onAuthStateChanged((user) => {
         if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel") && window.localStorage.getItem("current_server")) {
             document.getElementById("server_info__channel_name").innerText = "#" + window.localStorage.getItem("current_channel").split("!:DISPUTE_CHANNEL::GET::!?")[0]
             document.getElementById("server_name").innerText = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0]
+            document.title = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0] + " - On Dispute"
 
             document.getElementById("server_name").addEventListener('click', () => {
                 document.getElementById("copy_server_code").style.display = "block"
@@ -208,6 +209,7 @@ auth.onAuthStateChanged((user) => {
 
                 let new_server_name = new_server_form.servername.value + "!:DISPUTE_SERVER::GET::!?" + getString(12)
                 db.collection("servers").doc(new_server_name).set({
+                    owner: user.uid,
                     channels: [
                         "general"
                     ],
@@ -233,10 +235,10 @@ auth.onAuthStateChanged((user) => {
 
             db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => { // basic permissions
                 let data = doc.data()
-                if (user.uid != data.owner) {
-                    document.querySelector("#newchannel").style.display = "none"
-                } else {
+                if (user.uid = data.owner) {
                     console.log("The currently signed in user is the owner of the current server they are in.")
+                } else {
+                    document.querySelector("#newchannel").style.display = "block"
                 }
             })
         }
