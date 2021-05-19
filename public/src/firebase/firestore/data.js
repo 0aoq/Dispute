@@ -61,7 +61,7 @@ auth.onAuthStateChanged((user) => {
                         for (datapoint of data.users) {
                             if (datapoint == user.uid) { // is the user in the server? uid is unique, displayName isn't.
                                 document.getElementById("servers_list").insertAdjacentHTML("beforeend", `
-                                    <a style="background-image: url(); background: rgb(83, 108, 129); margin: 0;" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
+                                    <a style="background-image: url(); background: rgb(73, 96, 114); margin: 0; font-size: 1.5vh" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
                                 `)
                             }
                         }
