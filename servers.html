@@ -82,22 +82,13 @@
             -webkit-box-direction: normal;
             -ms-flex-direction: column;
             flex-direction: column;
-            position: relative;
+            position: absolute;
             overflow: hidden;
             padding: 10px;
-            width: 80vw;
-        }
-        
-        @media screen and (max-width: 800px) {
-            .messages {
-                width: 80vh;
-            }
-        }
-        
-        @media screen and (max-width: 600px) {
-            #sidebar-2 {
-                display: none;
-            }
+            height: 95vh;
+            margin-left: -30px;
+            width: calc(90vw - 150px);
+            margin-top: 40px;
         }
         
         #msgs {
@@ -125,6 +116,54 @@
             display: none;
             /* for browsers that don't already support it */
         }
+        
+        #server_name {
+            -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
+            box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
+            background: var(--background-dark);
+            margin-bottom: 20px;
+        }
+        
+        #server_info {
+            flex-direction: column;
+            min-height: 0;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            width: 100%;
+            right: 0;
+        }
+        
+        #server_info__channel_name {
+            -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
+            box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
+            background: var(--background-dark);
+            margin-bottom: 20px;
+        }
+        
+        @media screen and (max-width: 800px) {
+            .messages {
+                width: max-content;
+            }
+            #sidebar-2 {
+                display: none;
+            }
+            #server_info {
+                width: 83.5vw;
+            }
+        }
+        
+        @media screen and (min-width: 1500px) {
+            #server_info {
+                width: 83.8vw;
+            }
+        }
+        
+        a.no_effect:hover {
+            transform: scale(1.0);
+            padding: 8px;
+            height: auto;
+        }
     </style>
 </head>
 
@@ -138,19 +177,25 @@
             <a style="text-align: center;"><i class="material-icons">apps</i></a>
         </div>
 
-        <div class="sidebar menu sidebar-2" id="channels"></div>
+        <div class="sidebar menu sidebar-2" id="channels">
+            <a id="server_name">Dev</a>
+        </div>
 
-        <div class="messages">
-            <ul style="list-style: none; height: 82vh; overflow: hidden auto;" id="msgs"></ul>
+        <div id="server_info" class="sidebar menu" style="background: none;">
+            <a id="server_info__channel_name" class="no_effect">#general</a>
 
-            <ul style="list-style: none;">
-                <li class="card" id="messagebox" style="width: 99%;">
-                    <form style="display: flex;" id="message_form">
-                        <textarea name="msg" style="width: 90%; display: inline; resize: none;"></textarea>
-                        <button style="width: 10vw; display: inline; margin-bottom: 1.2rem; margin-left: 10px;"><i class="material-icons" style="font-size: 3vh;">send</i></button>
-                    </form>
-                </li>
-            </ul>
+            <div class="messages">
+                <ul style="list-style: none; height: 82vh; overflow: hidden auto;" id="msgs"></ul>
+
+                <ul style="list-style: none;">
+                    <li class="card" id="messagebox" style="width: 99%;">
+                        <form style="display: flex;" id="message_form">
+                            <textarea name="msg" style="width: 90%; display: inline; resize: none;"></textarea>
+                            <button style="width: 10vw; display: inline; margin-bottom: 1.2rem; margin-left: 10px;"><i class="material-icons" style="font-size: 3vh;">send</i></button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
