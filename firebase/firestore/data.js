@@ -120,6 +120,9 @@ auth.onAuthStateChanged((user) => {
                     }, 500);
                 }
             })
+        } else {
+            window.localStorage.setItem("current_channel", "general")
+            window.reload()
         }
     }
 });
