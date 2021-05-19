@@ -1,6 +1,6 @@
 # 🦜 Dispute
 
-A discord-clone. Dispute currently supports servers and server creation, channels and channel creation, and messages.
+Open source work in progress discord clone. Dispute currently supports servers and server creation, channels and channel creation, and messages.
 
 Dispute used Firebase to store data and authenticate.
 
