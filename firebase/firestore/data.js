@@ -17,15 +17,18 @@ function switch_channel(channel) {
 
 auth.onAuthStateChanged((user) => {
     if (user) {
-        db.doc("servers/dev").get().then((doc) => {
-            let data = doc.data()
+        db.collection("servers").doc("dev")
+            .onSnapshot((doc) => {
+                let data = doc.data()
 
-            for (datapoint of data.channels) {
-                document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                    <a style="display: flex;" onclick="switch_channel('${datapoint}')">#${datapoint}</a> 
-                `)
-            }
-        })
+                for (datapoint of data.channels) {
+                    let channel_name = datapoint.split("!:SHITCORD_CHANNEL::GET::!?")[0]
+                    let code = datapoint.split("!:SHITCORD_CHANNEL::GET::!?")[1]
+                    document.getElementById("channels").insertAdjacentHTML("beforeend", `
+                        <a style="display: flex;" onclick="switch_channel('${channel_name}')" id="${code}">#${channel_name}</a> 
+                    `)
+                }
+            })
 
         db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).get().then((doc) => {
             if (doc.exists) {
@@ -41,23 +44,6 @@ auth.onAuthStateChanged((user) => {
 
         if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel")) {
             document.getElementById("server_info__channel_name").innerText = "#" + window.localStorage.getItem("current_channel");
-            /* db.collection("servers/dev/general").get().then((querySnapshot) => { // DO NOT USE : NOT REALTIME : DOESN'T SUPPORT MULTIPLE CHANNELS
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data()
-
-                    for (datapoint of data.sent) {
-                        document.getElementById("msgs").insertAdjacentHTML("beforeend", `
-                
-                            <li class="card message" style="margin-top: 5px; width: 99%;">
-                                <h5 style="display: inline; user-select: none;">${data.name}</h5>
-                                <span style="margin-left: 20px;">${datapoint}</span>
-                            </li>
-                        
-                        `)
-                    }
-                });
-            }); */
-
             db.collection(`servers/dev/${window.localStorage.getItem("current_channel")}`)
                 .onSnapshot((querySnapshot) => { // Add real time support
                     querySnapshot.forEach((doc) => {
@@ -119,6 +105,29 @@ auth.onAuthStateChanged((user) => {
                         message_form.reset()
                     }, 500);
                 }
+            })
+
+            document.getElementById("newchannel").addEventListener('click', () => {
+                if (document.getElementById("newchannel__form").style.display == "block") {
+                    document.getElementById("newchannel__form").style.display = "none"
+                } else {
+                    document.getElementById("newchannel__form").style.display = "block"
+                }
+            })
+
+            document.getElementById("newchannel__form_set").addEventListener('submit', e => {
+                e.preventDefault()
+
+                let channelname = document.getElementById("newchannel__form_set").channel.value + "!:SHITCORD_CHANNEL::GET::!?" + getString(10)
+                db.collection(`servers/dev/${channelname}`).doc("info").set({
+                    total_msgs: 0
+                })
+
+                db.doc("servers/dev").get().then((doc) => {
+                    let data = doc.data()
+                    data.channels.push(channelname)
+                    db.collection("servers").doc("dev").set(data)
+                })
             })
         } else {
             window.localStorage.setItem("current_channel", "general")
