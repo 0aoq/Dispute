@@ -252,9 +252,11 @@
         <div class="sidebar menu" id="sidebar" style="width: 75px;">
             <a style="margin: 0;" class="server_icon" onclick="open_new_server_modal()">Join</a>
             <a style="margin: 0;" class="server_icon" onclick="open_server_modal()">New</a>
+
+            <div id="servers_list"></div>
         </div>
 
-        <div class="sidebar menu sidebar-2" id="channels">
+        <div class="sidebar menu sidebar-2">
             <a id="server_name">Loading...</a>
 
             <a id="newchannel">Make Channel</a>
@@ -265,6 +267,8 @@
                     <button>Create</button>
                 </form>
             </a>
+
+            <div id="channels"></div>
 
             <div class="panel-1" aria-label="user_section" id="user_info">
                 <h4>Loading...</h4>
