@@ -24,9 +24,12 @@ auth.onAuthStateChanged((user) => {
                 for (datapoint of data.channels) {
                     let channel_name = datapoint.split("!:SHITCORD_CHANNEL::GET::!?")[0]
                     let code = datapoint.split("!:SHITCORD_CHANNEL::GET::!?")[1]
-                    document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                        <a style="display: flex;" onclick="switch_channel('${channel_name}')" id="${code}">#${channel_name}</a> 
-                    `)
+
+                    if (!document.getElementById(channel_name + "!:SHITCORD_CHANNEL::GET::!?" + code && datapoint.split("!:SHITCORD_CHANNEL::GET::!?")[2] == null)) {
+                        document.getElementById("channels").insertAdjacentHTML("beforeend", `
+                            <a style="display: flex;" onclick="switch_channel('${datapoint}')" id="${code}">#${channel_name}</a> 
+                        `)
+                    }
                 }
             })
 
