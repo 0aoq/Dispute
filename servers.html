@@ -250,11 +250,12 @@
 
     <div class="container-2">
         <div class="sidebar menu" id="sidebar" style="width: 75px;">
+            <a style="margin: 0;" class="server_icon" onclick="open_new_server_modal()">Join</a>
             <a style="margin: 0;" class="server_icon" onclick="open_server_modal()">New</a>
         </div>
 
         <div class="sidebar menu sidebar-2" id="channels">
-            <a id="server_name">Dev</a>
+            <a id="server_name">Loading...</a>
 
             <a id="newchannel">Make Channel</a>
             <a id="newchannel__form" style="display: none;">
@@ -266,13 +267,13 @@
             </a>
 
             <div class="panel-1" aria-label="user_section" id="user_info">
-                <h4>user.displayName</h4>
+                <h4>Loading...</h4>
                 <a aria-label="sign_out" class="btn" style="margin-left: 15px;">Sign Out</a>
             </div>
         </div>
 
         <div id="server_info" class="sidebar menu" style="background: none;">
-            <a id="server_info__channel_name" class="no_effect">#general</a>
+            <a id="server_info__channel_name" class="no_effect">Loading...</a>
 
             <div class="messages">
                 <ul style="list-style: none; height: 82vh; overflow: hidden auto;" id="msgs"></ul>
@@ -304,6 +305,22 @@
 
                 <br>
                 <button>Create</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="join_server_modal" class="modal" style="overflow: hidden;">
+        <div class="modal-content">
+            <a class="close" id="join_server_close">&times;</a>
+            <br>
+            <form id="join_server_form">
+                <h2>Join A Community</h2>
+
+                <p style="color: white; text-align: left;">Server Code</p>
+                <input type="text" name="servercode" autocomplete="off">
+
+                <br>
+                <button>Join</button>
             </form>
         </div>
     </div>
@@ -346,6 +363,23 @@
         window.onclick = function(event) {
             if (event.target == server_modal) {
                 server_modal.style.display = "none";
+            }
+        }
+
+        let new_server_modal = document.getElementById("join_server_modal");
+        var new_server_close = document.getElementsByClassName("close")[1];
+
+        function open_new_server_modal() {
+            new_server_modal.style.display = "grid";
+        }
+
+        server_close.onclick = function() {
+            new_server_modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == server_modal) {
+                new_server_modal.style.display = "none";
             }
         }
     </script>
