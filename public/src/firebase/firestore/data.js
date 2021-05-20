@@ -17,7 +17,7 @@ function switch_channel(channel) {
 
 function switch_server(server) {
     window.localStorage.setItem("current_server", server)
-    window.localStorage.setItem("current_channel", "Switch to a channel to use Dispute")
+    window.localStorage.setItem("current_channel", "Dispute Home")
     window.location.reload()
 }
 
@@ -106,13 +106,23 @@ auth.onAuthStateChanged((user) => {
             document.title = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0] + " - On Dispute"
 
             document.getElementById("server_name").addEventListener('click', () => {
-                document.getElementById("copy_server_code").style.display = "block"
-                document.getElementById("copy_server_code").value = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[1]
-                document.getElementById("copy_server_code").select()
-                document.getElementById("copy_server_code").setSelectionRange(0, 99999)
-                document.execCommand("copy")
-                document.getElementById("copy_server_code").style.display = "none"
-                alert("Copied Server Code: " + document.getElementById("copy_server_code").value)
+                if (confirm("Copy direct server link instead of server join code?")) {
+                    document.getElementById("copy_server_code").style.display = "block"
+                    document.getElementById("copy_server_code").value = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[1]
+                    document.getElementById("copy_server_code").select()
+                    document.getElementById("copy_server_code").setSelectionRange(0, 99999)
+                    document.execCommand("copy")
+                    document.getElementById("copy_server_code").style.display = "none"
+                    alert("Copied Server Code: " + document.getElementById("copy_server_code").value)
+                } else {
+                    document.getElementById("copy_server_code").style.display = "block"
+                    document.getElementById("copy_server_code").value = "https://dispute-app.web.app/app?" + window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[1]
+                    document.getElementById("copy_server_code").select()
+                    document.getElementById("copy_server_code").setSelectionRange(0, 99999)
+                    document.execCommand("copy")
+                    document.getElementById("copy_server_code").style.display = "none"
+                    alert("Copied Server Code: " + document.getElementById("copy_server_code").value)
+                }
             })
 
             db.collection("servers").doc(window.localStorage.getItem("current_server"))
@@ -161,17 +171,19 @@ auth.onAuthStateChanged((user) => {
                     }
                 })
 
-            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.uid).get().then((doc) => {
-                if (doc.exists) {
-                    console.log("User channel profile already exists.")
-                } else {
-                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.uid).set({
-                        name: user.displayName,
-                        server_verified: false,
-                        sent: []
-                    })
-                }
-            })
+            if (window.localStorage.getItem("current_channel") != "Dispute Home") {
+                db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.uid).get().then((doc) => {
+                    if (doc.exists) {
+                        console.log("User channel profile already exists.")
+                    } else {
+                        db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.uid).set({
+                            name: user.displayName,
+                            server_verified: false,
+                            sent: []
+                        })
+                    }
+                })
+            }
 
             db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`)
                 .onSnapshot((querySnapshot) => { // Add real time support
