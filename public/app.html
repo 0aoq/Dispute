@@ -313,7 +313,7 @@
                 <ul style="list-style: none; height: 82vh; overflow: hidden auto;" id="msgs"></ul>
 
                 <ul style="list-style: none;">
-                    <li class="card" id="messagebox" style="width: 99%;">
+                    <li class="card" id="messagebox" style="width: 99%; display: none;">
                         <form style="display: flex;" id="message_form">
                             <textarea name="msg" style="width: 90%; display: inline; resize: none;"></textarea>
                             <button style="width: 10vw; display: inline; margin-bottom: 1.2rem; margin-left: 10px;"><i data-feather="send" style="font-size: 3vh;">Loading</i></button>
@@ -460,7 +460,7 @@
                                         if (confirm("You have successfully joined the server, switch to it now?")) {
                                             window.localStorage.setItem("current_server", doc.id)
                                             window.localStorage.setItem("current_channel", "general")
-                                            window.location = "servers.html"
+                                            window.location = "app"
                                         }
                                     }).catch(error => {
                                         console.log(error)
