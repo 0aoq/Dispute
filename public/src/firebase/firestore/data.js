@@ -37,12 +37,16 @@ auth.onAuthStateChanged((user) => {
                     let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
 
                     if (doc_code == join_server_form.servercode.value) {
-                        data.users.push(user.uid)
-                        db.collection("servers").doc(doc.id).set(data).then(() => {
-                            console.log("Written data.")
-                        }).catch(error => {
-                            console.log(error)
-                        })
+                        if (!datapoint == user.uid) {
+                            data.users.push(user.uid)
+                            db.collection("servers").doc(doc.id).set(data).then(() => {
+                                console.log("Written data.")
+                            }).catch(error => {
+                                console.log(error)
+                            })
+                        } else {
+                            alert("You are already in the requested server.")
+                        }
                     }
                 })
             })
