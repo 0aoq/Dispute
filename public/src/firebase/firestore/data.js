@@ -80,7 +80,7 @@ auth.onAuthStateChanged((user) => {
             db.collection("servers").doc(new_server_name).set({
                 owner: user.uid,
                 channels: [
-                    "general"
+                    "general!:DISPUTE_CHANNEL::GET::!?__dispute_defaults_general__!:DISPUTE_CHANNEL_TYPE::GET::!?Chat"
                 ],
                 users: [
                     user.uid
@@ -163,11 +163,11 @@ auth.onAuthStateChanged((user) => {
                     }
                 })
 
-            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).get().then((doc) => {
+            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.uid).get().then((doc) => {
                 if (doc.exists) {
                     console.log("User channel profile already exists.")
                 } else {
-                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set({
+                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.uid).set({
                         name: user.displayName,
                         server_verified: false,
                         sent: []
@@ -206,6 +206,8 @@ auth.onAuthStateChanged((user) => {
                                             if (rule[1] == "owner") {
                                                 if (doc.data().owner != user.uid) {
                                                     document.getElementById("messagebox").style.display = "none"
+                                                } else {
+                                                    document.getElementById("messagebox").style.display = "block"
                                                 }
                                             } else {
                                                 document.getElementById("messagebox").style.display = "block"
@@ -237,7 +239,7 @@ auth.onAuthStateChanged((user) => {
                                     data.server_verified = true
                                     data.sent.push(message_form.msg.value + "!DISPUTE_STORE/dispute_token:yXA?U::/" + getString(8) + "!DISPUTE_STORE/dispute_token:dwA?U::/" + _data.total_msgs)
 
-                                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set(data).then(() => {
+                                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.uid).set(data).then(() => {
                                         console.log("Written data.")
                                     }).catch((error) => {
                                         console.log(error)
@@ -301,8 +303,10 @@ auth.onAuthStateChanged((user) => {
             db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => { // basic permissions
                 let data = doc.data()
                 if (user.uid == data.owner) {
+                    document.getElementById("newchannel").style.display = "block"
                     console.log("The currently signed in user is the owner of the current server they are in.")
                 } else {
+                    document.getElementById("newchannel").style.display = "none"
                     console.log("The currently signed in user is not the owner of the current server they are in.")
                 }
             })
