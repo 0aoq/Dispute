@@ -5,385 +5,42 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="favicon">
-    <title>Viewing Dispute</title>
+    <title>Dispute - A place for conversations</title>
 
+    <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="src/styles.css">
-
-    <script src="https://c-zero.web.app/js/brickjs.js"></script>
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="shortcut icon" type="image/jpg" href="src/dispute_favicon.svg" />
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-analytics.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
-
     <style>
-         :root {
-            --background-darkest: rgb(23, 30, 36);
-            --background-darker: #192127;
-            --background-dark: #1f2830;
+        li {
+            transition: background 0.2s;
+            border-radius: .2em;
+            padding: 5px;
         }
         
-        .container-2 {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-        }
-        
-        .sidebar {
-            overflow: hidden;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-orient: vertical;
-            -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            -ms-flex-negative: 0;
-            flex-shrink: 0;
-            position: relative;
-            background-color: var(--background-dark);
-            position: relative;
-            width: 72px;
-            -ms-flex-negative: 0;
-            flex-shrink: 0;
-        }
-        
-        .sidebar-2 {
-            flex-direction: column;
-            min-height: 0;
-            width: 240px;
-            -webkit-box-flex: 0;
-            -ms-flex: 0 0 auto;
-            flex: 0 0 auto;
-            background: var(--background-darker);
-        }
-        
-        @media screen and (max-width: 500px) {
-            .sidebar-2 {
-                width: 120px;
-                display: none;
-            }
-        }
-        
-        .messages {
-            min-width: 0;
-            min-height: 0;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-orient: vertical;
-            -webkit-box-direction: normal;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            position: absolute;
-            overflow: hidden;
-            padding: 10px;
-            height: 95vh;
-            margin-left: -30px;
-            width: calc(90vw - 150px);
-            margin-top: 40px;
-        }
-        
-        #msgs {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .message:hover {
-            transform: scale(1.005);
-        }
-        
-        #messagebox {
-            position: sticky;
-            -ms-flex-negative: 0;
-            flex-shrink: 0;
-            margin-top: -8px;
-            margin: auto;
-        }
-        
-        #messagebox:hover {
-            opacity: 1;
-        }
-        
-        datalist {
-            display: none;
-            /* for browsers that don't already support it */
-        }
-        
-        #server_name {
-            -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
-            box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
-            background: var(--background-dark);
-            margin-bottom: 20px;
-        }
-        
-        #server_info {
-            flex-direction: column;
-            min-height: 0;
-            -webkit-box-flex: 0;
-            -ms-flex: 0 0 auto;
-            flex: 0 0 auto;
-            width: 100%;
-            right: 0;
-        }
-        
-        #server_info__channel_name {
-            -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
-            box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
-            background: var(--background-dark);
-            margin-bottom: 20px;
-        }
-        
-        #sidebar {
-            transition: all 0.2s;
-        }
-        
-        #sidebar a {
-            position: relative;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-pack: center;
-            -ms-flex-pack: center;
-            justify-content: center;
-        }
-        
-        .server_icon {
-            background-size: cover;
-            background-position: center;
-            -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
-            box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
-        }
-        
-        @media screen and (max-width: 800px) {
-            .messages {
-                width: max-content;
-            }
-            #sidebar-2 {
-                display: none;
-            }
-            #server_info {
-                width: 83.5vw;
-            }
-        }
-        
-        @media screen and (max-width: 500px) {
-            .messages {
-                width: 80vw;
-            }
-        }
-        
-        @media screen and (min-width: 1500px) {
-            #server_info {
-                width: 83.8vw;
-            }
-        }
-        
-        a.no_effect:hover {
-            transform: scale(1.0);
-            padding: 8px;
-            height: auto;
-        }
-        
-        .panel-1 {
-            height: 52px;
-            font-size: 14px;
-            font-weight: 500;
-            -webkit-box-align: center;
-            -ms-flex-align: center;
-            display: flex;
-            align-items: center;
-            padding: 0 8px;
-            margin-bottom: 1px;
-            position: absolute;
-            bottom: 0;
-            background: var(--background-dark);
-            width: 100%;
-            color: white;
-        }
-        
-        .panel-1 h4 {
-            font-size: 1.5vh;
-        }
-        /* Modal */
-        
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.4);
-            place-items: center;
-        }
-        
-        .modal-content {
-            background-color: var(--background-dark);
-            place-self: center;
-            padding: 20px;
-            width: 30%;
-            color: white;
-        }
-        
-        .close {
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+        li:hover {
+            list-style: circle;
+            background: #192127;
         }
     </style>
 </head>
 
-<body style="height: 100%; display: block; background: var(--background-darkest);">
-    <datalist id="auth_required">true</datalist>
-    <datalist id="page">servers</datalist>
-    <input type="text" style="display: none;" id="copy_server_code">
-    <div class="container-2">
-        <div class="sidebar menu" id="sidebar" style="width: 75px;">
-            <a style="margin: 0;" class="server_icon" onclick="open_new_server_modal()">Join</a>
-            <a style="margin: 0;" class="server_icon" onclick="open_server_modal()">New</a>
-
-            <div id="servers_list"></div>
-        </div>
-
-        <div class="sidebar menu sidebar-2">
-            <a id="server_name">Loading...</a>
-
-            <a id="newchannel" style="display: none;">Make Channel</a>
-            <a id="newchannel__form" style="display: none;">
-                <form id="newchannel__form_set">
-                    <p>Name</p>
-                    <input type="text" name="channel" autocomplete="off">
-                    <button>Create</button>
-                </form>
-            </a>
-
-            <div id="channels"></div>
-
-            <div class="panel-1" aria-label="user_section" id="user_info">
-                <h4>Loading...</h4>
-                <a aria-label="sign_out" class="btn" style="margin-left: 15px;">Sign Out</a>
-            </div>
-        </div>
-
-        <div id="server_info" class="sidebar menu" style="background: none;">
-            <a id="server_info__channel_name" class="no_effect">Loading...</a>
-
-            <div class="messages">
-                <ul style="list-style: none; height: 82vh; overflow: hidden auto;" id="msgs"></ul>
-
-                <ul style="list-style: none;">
-                    <li class="card" id="messagebox" style="width: 99%;">
-                        <form style="display: flex;" id="message_form">
-                            <textarea name="msg" style="width: 90%; display: inline; resize: none;"></textarea>
-                            <button style="width: 10vw; display: inline; margin-bottom: 1.2rem; margin-left: 10px;"><i class="material-icons" style="font-size: 3vh;">send</i></button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
+<body style="color: white;">
+    <div class="container">
+        <div class="card">
+            <h1><a href="https://github.com/0aoq/Dispute">🦜 Dispute</a> is a place for invite only online conversations</h1>
+            <ul style="font-size: 3vh;">
+                <li><i data-feather="github" style="margin-right: 10px;"></i><a href="https://github.com/0aoq/Dispute">Open Source</a></li>
+                <li><i data-feather="lock" style="margin-right: 10px;"></i>Private</li>
+                <li><i data-feather="shield" style="margin-right: 10px;"></i>Secure</li>
+            </ul>
+            <p style="font-size: 2.5vh;  text-align: center;">Join today to start connecting to friends and communites through invite only servers!</p>
+            <button onclick="window.location = 'auth.html'">Join Dispute</button>
         </div>
     </div>
-
-    <div id="server_modal" class="modal" style="overflow: hidden;">
-        <div class="modal-content">
-            <a class="close" id="server_close">&times;</a>
-            <br>
-            <form id="new_server_form">
-                <h2>Start A Community</h2>
-
-                <p style="color: white; text-align: left;">Server Name</p>
-                <input type="text" name="servername" autocomplete="off">
-
-                <p style="color: white; text-align: left;">Picture URL</p>
-                <input type="url" name="picurl" autocomplete="off" disabled>
-
-                <br>
-                <button>Create</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="join_server_modal" class="modal" style="overflow: hidden;">
-        <div class="modal-content">
-            <a class="close" id="join_server_close">&times;</a>
-            <br>
-            <form id="join_server_form">
-                <h2>Join A Community</h2>
-
-                <p style="color: white; text-align: left;">Server Code</p>
-                <input type="text" name="servercode" autocomplete="off">
-
-                <br>
-                <button>Join</button>
-            </form>
-        </div>
-    </div>
-
-    <script src="src/firebase/firebase-init.js"></script>
-    <script src="src/firebase/users/auth.js"></script>
-    <script src="src/firebase/firestore/data.js"></script>
 
     <script>
-        // Message Sending
-        const message_form = document.getElementById("message_form")
-        let shift = false
-        document.querySelector("textarea").addEventListener('keydown', e => { // Check for shift submit
-            if (e.key == "Enter") {
-                if (!shift) {
-                    document.querySelector(`#${message_form.id} button`).click() // .submit() ignores preventDefault()
-                }
-            } else if (e.key == "Shift") {
-                shift = true
-
-                setTimeout(() => {
-                    shift = false
-                }, 100);
-            }
-        })
-
-        // New Server Modal
-
-        let server_modal = document.getElementById("server_modal");
-        var server_close = document.getElementsByClassName("close")[0];
-
-        function open_server_modal() {
-            server_modal.style.display = "grid";
-        }
-
-        server_close.onclick = function() {
-            server_modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == server_modal) {
-                server_modal.style.display = "none";
-            } else if (event.target == new_server_modal) {
-                new_server_modal.style.display = "none";
-            }
-        }
-
-        let new_server_modal = document.getElementById("join_server_modal");
-        var new_server_close = document.getElementById("join_server_close");
-
-        function open_new_server_modal() {
-            new_server_modal.style.display = "grid";
-        }
-
-        new_server_close.onclick = function() {
-            new_server_modal.style.display = "none";
-        }
+        feather.replace()
     </script>
 </body>
 
