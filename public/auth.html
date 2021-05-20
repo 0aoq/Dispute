@@ -71,8 +71,11 @@
 
         function forgot_password() {
             if (document.getElementById("loginform").email.value) {
-                auth.sendPasswordResetEmail(document.getElementById("loginform").email.value)
-                alert("Send email to " + document.getElementById("loginform").email.value + " to reset password.")
+                auth.sendPasswordResetEmail(document.getElementById("loginform").email.value).then(function() {
+                    alert("Sent email to " + document.getElementById("loginform").email.value + " to reset password.\nCheck your spam/junk folder if you can't find it.")
+                }).catch(function(error) {
+                    alert("Failed to send email to " + document.getElementById("loginform").email.value + " to reset password:\n\n" + error)
+                });
             } else {
                 alert("Please add an email to the email box in order to reset your password.")
             }
