@@ -109,11 +109,21 @@ auth.onAuthStateChanged((user) => {
                         */
 
                         if (!document.getElementById(channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code && datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[2] == null)) {
-                            document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                                <a style="display: flex;" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code + "!:DISPUTE_CHANNEL_TYPE::GET::!?" + type}">
-                                    <i class="material-icons" style="margin-right: 10px;">chat</i> #${channel_name}
-                                </a> 
-                            `)
+                            if (type == "chat") {
+                                document.getElementById("channels").insertAdjacentHTML("beforeend", `
+                                    <a style="display: flex;" class="channel" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code + "!:DISPUTE_CHANNEL_TYPE::GET::!?" + type}">
+                                        <i data-feather="hash" style="margin-right: 10px;"></i> ${channel_name}
+                                    </a> 
+                                `)
+                            } else if (type == "voice") {
+                                document.getElementById("channels").insertAdjacentHTML("beforeend", `
+                                    <a style="display: flex;" class="channel" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code + "!:DISPUTE_CHANNEL_TYPE::GET::!?" + type}">
+                                        <i data-feather="at-sign" style="margin-right: 10px;"></i> ${channel_name}
+                                    </a> 
+                                `)
+                            }
+
+                            feather.replace()
                         }
                     }
                 })
