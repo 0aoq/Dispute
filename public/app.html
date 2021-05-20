@@ -361,7 +361,7 @@
 
     <div id="settings_modal" class="modal" style="overflow: hidden;">
         <div class="modal-content">
-            <a class="close" id="join_server_close">&times;</a>
+            <a class="close" id="settings_modal_close">&times;</a>
             <br>
             <form id="signupform" style="width: 100%;">
                 <p style="color: white; text-align: left;">Change Email</p>
@@ -435,7 +435,7 @@
             settings_modal.style.display = "grid";
         }
 
-        new_server_close.onclick = function() {
+        settings_modal_close.onclick = function() {
             settings_modal.style.display = "none";
         }
 
