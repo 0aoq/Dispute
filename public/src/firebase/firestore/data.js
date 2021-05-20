@@ -109,7 +109,7 @@ auth.onAuthStateChanged((user) => {
                         */
 
                         if (!document.getElementById(channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code && datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[2] == null)) {
-                            if (type == "chat") {
+                            if (type == "chat" || type == null) {
                                 document.getElementById("channels").insertAdjacentHTML("beforeend", `
                                     <a style="display: flex;" class="channel" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code + "!:DISPUTE_CHANNEL_TYPE::GET::!?" + type}">
                                         <i data-feather="hash" style="margin-right: 10px;"></i> ${channel_name}
