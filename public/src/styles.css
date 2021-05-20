@@ -271,7 +271,7 @@ body.light .sidebar {
     background-color: #2d3a46;
 }
 
-.sidebar a:not(.btn) {
+.sidebar.menu a:not(.btn) {
     font-size: 18px;
     color: lightgray;
     display: block;
@@ -293,7 +293,7 @@ body.light .sidebar {
     padding-bottom: 20px;
 }
 
-.sidebar a:not(.btn):hover {
+.sidebar.menu a:not(.btn):hover {
     background: #222d35;
     color: white;
 }
