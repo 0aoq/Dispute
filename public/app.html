@@ -30,6 +30,7 @@
     <input type="text" style="display: none;" id="copy_server_code">
     <div class="container-2">
         <div class="sidebar menu" id="sidebar" style="width: 75px;">
+            <a style="margin: 0;" class="server_icon" onclick="togglesidebar()" id="mobile_sidebar"><i data-feather="menu"></i></a>
             <a style="margin: 0;" class="server_icon" onclick="open_new_server_modal()">Join</a>
             <a style="margin: 0; margin-bottom: 20px;" class="server_icon" onclick="open_server_modal()">New</a>
 
@@ -233,6 +234,16 @@
                 }
             }
         });
+
+        // Mobile channel bar
+
+        function togglesidebar() {
+            if (document.querySelector(".sidebar-2").style.display === "none") {
+                document.querySelector(".sidebar-2").style.display = "block"
+            } else {
+                document.querySelector(".sidebar-2").style.display = "none"
+            }
+        }
     </script>
 </body>
 
