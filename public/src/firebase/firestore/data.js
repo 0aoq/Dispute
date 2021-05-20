@@ -141,16 +141,22 @@ auth.onAuthStateChanged((user) => {
                         */
 
                         if (!document.getElementById(channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code && datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[2] == null)) {
-                            if (type == "chat" || type == null) {
+                            if (type == "Chat" || type == null) {
                                 document.getElementById("channels").insertAdjacentHTML("beforeend", `
                                     <a style="display: flex;" class="channel" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code + "!:DISPUTE_CHANNEL_TYPE::GET::!?" + type}">
                                         <i data-feather="hash" style="margin-right: 10px;"></i> ${channel_name}
                                     </a> 
                                 `)
-                            } else if (type == "voice") {
+                            } else if (type == "Voice") {
                                 document.getElementById("channels").insertAdjacentHTML("beforeend", `
                                     <a style="display: flex;" class="channel" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code + "!:DISPUTE_CHANNEL_TYPE::GET::!?" + type}">
                                         <i data-feather="at-sign" style="margin-right: 10px;"></i> ${channel_name}
+                                    </a> 
+                                `)
+                            } else if (type == "Announcements") {
+                                document.getElementById("channels").insertAdjacentHTML("beforeend", `
+                                    <a style="display: flex;" class="channel" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code + "!:DISPUTE_CHANNEL_TYPE::GET::!?" + type}">
+                                        <i data-feather="info" style="margin-right: 10px;"></i> ${channel_name}
                                     </a> 
                                 `)
                             }
@@ -192,6 +198,23 @@ auth.onAuthStateChanged((user) => {
                                         </li>
                                 
                                     `)
+                                }
+                            }
+                        } else {
+                            for (datapoint of data.info) {
+                                let allowed_write = datapoint.split(": ")[1]
+                                if (allowed_write) {
+                                    db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => {
+                                        if (doc.exists) {
+                                            if (allowed_write == "owner") {
+                                                if (doc.data().owner != user.uid) {
+                                                    document.getElementById("messagebox").style.display = "none"
+                                                }
+                                            } else {
+                                                document.getElementById("messagebox").style.display = "block"
+                                            }
+                                        }
+                                    })
                                 }
                             }
                         }
@@ -247,9 +270,22 @@ auth.onAuthStateChanged((user) => {
             document.getElementById("newchannel__form_set").addEventListener('submit', e => {
                 e.preventDefault()
 
-                let channelname = document.getElementById("newchannel__form_set").channel.value + "!:DISPUTE_CHANNEL::GET::!?" + getString(10) + "!:DISPUTE_CHANNEL_TYPE::GET::!?" + "chat"
+                let type = "!:DISPUTE_CHANNEL_TYPE::GET::!?" + document.getElementById("newchannel__form_set").type.value
+                let channelname = document.getElementById("newchannel__form_set").channel.value + "!:DISPUTE_CHANNEL::GET::!?" + getString(10) + type
+
+                let locked
+
+                if (document.getElementById("newchannel__form_set").type.value == "Announcements") {
+                    locked = "owner"
+                } else if (document.getElementById("newchannel__form_set").type.value == "Chat") {
+                    locked = "all"
+                }
+
                 db.collection(`servers/${window.localStorage.getItem("current_server")}/${channelname}`).doc("info").set({
-                    total_msgs: 0
+                    total_msgs: 0,
+                    rules: [
+                        "allow_write_from: " + locked
+                    ]
                 })
 
                 db.doc(`servers/${window.localStorage.getItem("current_server")}`).get().then((doc) => {
