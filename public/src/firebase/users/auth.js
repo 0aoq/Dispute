@@ -52,7 +52,11 @@ auth.onAuthStateChanged((user) => {
 
         if (document.getElementById("page").innerHTML == "auth") {
             setTimeout(() => {
-                window.location = "app.html"
+                if (window.location.search.slice(1)) {
+                    window.location = window.location.search.slice(1)
+                } else {
+                    window.location = "app.html"
+                }
             }, 100);
         } else if (document.getElementById("page").innerHTML == "servers") {
             document.querySelector("#user_info h4").innerText = user.displayName
@@ -70,7 +74,7 @@ auth.onAuthStateChanged((user) => {
         console.log("User is not signed in.")
 
         if (document.getElementById("auth_required").innerHTML == "true") {
-            window.location = "auth.html"
+            window.location = "auth.html?" + window.location.href
         }
     }
 });
