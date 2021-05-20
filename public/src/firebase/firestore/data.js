@@ -96,10 +96,23 @@ auth.onAuthStateChanged((user) => {
                     for (datapoint of data.channels) {
                         let channel_name = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[0]
                         let code = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[1]
+                        let type = datapoint.split("!:DISPUTE_CHANNEL_TYPE::GET::!?")[1]
+
+                        /* 
+                           TODO:
+                            Check the set channel type, create a voice tab if type == "voice"
+                            Create a normal tab if type == "chat"
+
+                           DONE:
+                            Create channel type base,
+                            Begin adding channel icon to channel button
+                        */
 
                         if (!document.getElementById(channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code && datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[2] == null)) {
                             document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                                <a style="display: flex;" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code}">#${channel_name}</a> 
+                                <a style="display: flex;" onclick="switch_channel('${datapoint}')" id="${channel_name + "!:DISPUTE_CHANNEL::GET::!?" + code + "!:DISPUTE_CHANNEL_TYPE::GET::!?" + type}">
+                                    <i class="material-icons" style="margin-right: 10px;">chat</i> #${channel_name}
+                                </a> 
                             `)
                         }
                     }
@@ -191,7 +204,7 @@ auth.onAuthStateChanged((user) => {
             document.getElementById("newchannel__form_set").addEventListener('submit', e => {
                 e.preventDefault()
 
-                let channelname = document.getElementById("newchannel__form_set").channel.value + "!:DISPUTE_CHANNEL::GET::!?" + getString(10)
+                let channelname = document.getElementById("newchannel__form_set").channel.value + "!:DISPUTE_CHANNEL::GET::!?" + getString(10) + "!:DISPUTE_CHANNEL_TYPE::GET::!?" + "chat"
                 db.collection(`servers/${window.localStorage.getItem("current_server")}/${channelname}`).doc("info").set({
                     total_msgs: 0
                 })
