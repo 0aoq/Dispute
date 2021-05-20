@@ -7,3 +7,5 @@ Need help? Join the main Dispute server with code https://dispute-app.web.app/se
 
 ## Note:
 This repository might some times be behind, if you intend to only use Dispute, please use the website https://dispute-app.web.app 
+
+The main Dispute server may change with changes to how data is stored for servers.
