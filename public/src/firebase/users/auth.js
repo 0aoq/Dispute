@@ -51,7 +51,7 @@ auth.onAuthStateChanged((user) => {
 
         if (document.getElementById("page").innerHTML == "auth") {
             setTimeout(() => {
-                window.location = "servers.html"
+                window.location = "app.html"
             }, 100);
         } else if (document.getElementById("page").innerHTML == "servers") {
             document.querySelector("#user_info h4").innerText = user.displayName
