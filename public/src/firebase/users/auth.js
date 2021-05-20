@@ -32,6 +32,7 @@ if (document.getElementById("page").innerHTML == "auth") {
                     alert(errorMessage);
                 }
                 console.log(error);
+                alert(error)
             });
     })
 
@@ -57,6 +58,12 @@ auth.onAuthStateChanged((user) => {
             document.querySelector("#user_info h4").innerText = user.displayName
             document.querySelector("#user_info a").addEventListener('click', () => {
                 auth.signOut()
+            })
+
+            document.getElementById("change_email_form").addEventListener('submit', e => {
+                e.preventDefault()
+                user.updateEmail(document.getElementById("change_email_form").email.value)
+                document.getElementById("change_email_form").reset()
             })
         }
     } else {
