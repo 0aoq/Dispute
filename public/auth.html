@@ -51,7 +51,8 @@
             <button>Login</button>
         </form>
         <br>
-        <a style="margin: 0;" onclick="use_signup()">Need an account? Sign up.</a>
+        <a style="margin: 0;" onclick="use_signup()">Need an account? Sign up.</a><br>
+        <a style="margin: 0;" onclick="forgot_password()">Forgot your password? Reset it.</a>
     </div>
 
     <script src="src/firebase/firebase-init.js"></script>
@@ -66,6 +67,15 @@
         function use_signup() {
             document.getElementById("signup").style.display = "block"
             document.getElementById("login").style.display = "none"
+        }
+
+        function forgot_password() {
+            if (document.getElementById("loginform").email.value) {
+                authauth.sendPasswordResetEmail(document.getElementById("loginform").email.value)
+                alert("Send email to " + document.getElementById("loginform").email.value + " to reset password.")
+            } else {
+                alert("Please add an email to the email box in order to reset your password.")
+            }
         }
     </script>
 </body>
