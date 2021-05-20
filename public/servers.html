@@ -407,27 +407,27 @@
                 let id = window.location.search.slice(1)
 
                 if (id) {
-                    console.log("joined")
+                    console.log("checked invite")
                     db.collection("servers").get().then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
                             let data = doc.data()
                             let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
 
                             if (doc_code == id) {
-                                for (datapoint of data.users) {
-                                    if (datapoint != user.uid) {
-                                        data.users.push(user.uid)
-                                        db.collection("servers").doc(doc.id).set(data).then(() => {
-                                            console.log("Written data.")
+                                if (!data.users.includes(user.uid)) {
+                                    data.users.push(user.uid)
+                                    db.collection("servers").doc(doc.id).set(data).then(() => {
+                                        console.log("Written data.")
+                                        if (confirm("You have successfully joined the server, switch to it now?")) {
                                             window.localStorage.setItem("current_server", doc.id)
                                             window.localStorage.setItem("current_channel", "general")
                                             window.location = "servers.html"
-                                        }).catch(error => {
-                                            console.log(error)
-                                        })
-                                    } else {
-                                        alert("You are already in the requested server.")
-                                    }
+                                        }
+                                    }).catch(error => {
+                                        console.log(error)
+                                    })
+                                } else {
+                                    alert("Failed to join: You are already in this server.")
                                 }
                             }
                         })
