@@ -79,9 +79,7 @@ auth.onAuthStateChanged((user) => {
             let new_server_name = new_server_form.servername.value + "!:DISPUTE_SERVER::GET::!?" + getString(12)
             db.collection("servers").doc(new_server_name).set({
                 owner: user.uid,
-                channels: [
-                    "general!:DISPUTE_CHANNEL::GET::!?__dispute_defaults_general__!:DISPUTE_CHANNEL_TYPE::GET::!?Chat"
-                ],
+                channels: [],
                 users: [
                     user.uid
                 ]
@@ -187,14 +185,33 @@ auth.onAuthStateChanged((user) => {
                                 let int = datapoint.split("!DISPUTE_STORE/dispute_token:dwA?U::/")[1]
                                 if (!document.getElementById(data.name + ":" + datapoint + ":" + code) && datapoint.split("!DISPUTE_STORE/dispute_token:yXA?U::/")[2] == null) {
                                     msg = msg.replaceAll('"', "&quot;")
+
+                                    msg = msg.replaceAll('# ', "")
+                                    msg = msg.replaceAll('## ', "")
+                                    msg = msg.replaceAll('### ', "")
+                                    msg = msg.replaceAll('#### ', "")
+                                    msg = msg.replaceAll('##### ', "")
+
                                     document.getElementById("msgs").insertAdjacentHTML("beforeend", `
                     
                                         <li class="card message" style="margin-top: 5px; width: 99%; order: ${int};" id='${data.name + ":" + datapoint + ":" + code}'>
                                             <h5 style="display: inline; user-select: none;">${data.name}</h5>
-                                            <span style="margin-left: 20px;">${msg}</span>
+                                            <span style="margin-left: 20px;">${marked(msg)}</span>
                                         </li>
                                 
                                     `)
+
+                                    let links = document.querySelectorAll("#msgs li a")
+                                    for (var i = 0, len = links.length; i < len; i++) {
+                                        if (!links[i].classList.contains("btn")) {
+                                            links[i].classList.add("btn")
+                                        }
+                                    }
+
+                                    let p = document.querySelectorAll("#msgs li p")
+                                    for (var i = 0, len = p.length; i < len; i++) {
+                                        p[i].style.display = "inline"
+                                    }
                                 }
                             }
                         } else {
