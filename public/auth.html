@@ -71,7 +71,7 @@
 
         function forgot_password() {
             if (document.getElementById("loginform").email.value) {
-                authauth.sendPasswordResetEmail(document.getElementById("loginform").email.value)
+                auth.sendPasswordResetEmail(document.getElementById("loginform").email.value)
                 alert("Send email to " + document.getElementById("loginform").email.value + " to reset password.")
             } else {
                 alert("Please add an email to the email box in order to reset your password.")
