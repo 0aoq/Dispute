@@ -12,7 +12,7 @@
 
     <script src="https://c-zero.web.app/js/brickjs.js"></script>
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
     <link rel="shortcut icon" type="image/jpg" href="src/dispute_favicon.svg" />
 
     <!-- Firebase SDKs -->
@@ -220,6 +220,15 @@
         .panel-1 h4 {
             font-size: 1.5vh;
         }
+        
+        .channel {
+            color: #a5a6a8;
+            transition: color 0.2s;
+        }
+        
+        .channel:hover {
+            color: white;
+        }
         /* Modal */
         
         .modal {
@@ -294,7 +303,7 @@
                     <li class="card" id="messagebox" style="width: 99%;">
                         <form style="display: flex;" id="message_form">
                             <textarea name="msg" style="width: 90%; display: inline; resize: none;"></textarea>
-                            <button style="width: 10vw; display: inline; margin-bottom: 1.2rem; margin-left: 10px;"><i class="material-icons" style="font-size: 3vh;">send</i></button>
+                            <button style="width: 10vw; display: inline; margin-bottom: 1.2rem; margin-left: 10px;"><i data-feather="send" style="font-size: 3vh;">Loading</i></button>
                         </form>
                     </li>
                 </ul>
