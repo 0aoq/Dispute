@@ -198,22 +198,20 @@ auth.onAuthStateChanged((user) => {
                                 }
                             }
                         } else {
-                            if (data.info) {
-                                for (datapoint of data.info) {
-                                    let allowed_write = datapoint.split(": ")[1]
-                                    if (allowed_write) {
-                                        db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => {
-                                            if (doc.exists) {
-                                                if (allowed_write == "owner") {
-                                                    if (doc.data().owner != user.uid) {
-                                                        document.getElementById("messagebox").style.display = "none"
-                                                    }
-                                                } else {
-                                                    document.getElementById("messagebox").style.display = "block"
+                            for (datapoint of data.rules) {
+                                let rule = datapoint.split(": ")
+                                if (rule && rule[0] == "allow_write_from") {
+                                    db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => {
+                                        if (doc.exists) {
+                                            if (rule[1] == "owner") {
+                                                if (doc.data().owner != user.uid) {
+                                                    document.getElementById("messagebox").style.display = "none"
                                                 }
+                                            } else {
+                                                document.getElementById("messagebox").style.display = "block"
                                             }
-                                        })
-                                    }
+                                        }
+                                    })
                                 }
                             }
                         }
@@ -303,7 +301,7 @@ auth.onAuthStateChanged((user) => {
             db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => { // basic permissions
                 let data = doc.data()
                 if (user.uid == data.owner) {
-                    document.querySelector("#newchannel").style.display = "block"
+                    console.log("The currently signed in user is the owner of the current server they are in.")
                 } else {
                     console.log("The currently signed in user is not the owner of the current server they are in.")
                 }
