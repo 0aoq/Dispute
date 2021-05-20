@@ -24,13 +24,11 @@ function switch_server(server) {
 auth.onAuthStateChanged((user) => {
     if (user) {
         // Server Joining
-        console.log(user.uid)
         const join_server_form = document.getElementById("join_server_form")
 
         join_server_form.addEventListener('submit', e => {
             e.preventDefault()
 
-            console.log("submit")
             db.collection("servers").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     let data = doc.data()
@@ -124,7 +122,6 @@ auth.onAuthStateChanged((user) => {
                     let data = doc.data()
                     document.getElementById("channels").innerHTML = ""
 
-                    console.log(data)
                     for (datapoint of data.channels) {
                         let channel_name = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[0]
                         let code = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[1]
@@ -168,7 +165,7 @@ auth.onAuthStateChanged((user) => {
 
             db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).get().then((doc) => {
                 if (doc.exists) {
-                    console.log("Document data:", doc.data());
+                    console.log("User channel profile already exists.")
                 } else {
                     db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.displayName).set({
                         name: user.displayName,
@@ -201,20 +198,22 @@ auth.onAuthStateChanged((user) => {
                                 }
                             }
                         } else {
-                            for (datapoint of data.info) {
-                                let allowed_write = datapoint.split(": ")[1]
-                                if (allowed_write) {
-                                    db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => {
-                                        if (doc.exists) {
-                                            if (allowed_write == "owner") {
-                                                if (doc.data().owner != user.uid) {
-                                                    document.getElementById("messagebox").style.display = "none"
+                            if (data.info) {
+                                for (datapoint of data.info) {
+                                    let allowed_write = datapoint.split(": ")[1]
+                                    if (allowed_write) {
+                                        db.collection("servers").doc(window.localStorage.getItem("current_server")).get().then((doc) => {
+                                            if (doc.exists) {
+                                                if (allowed_write == "owner") {
+                                                    if (doc.data().owner != user.uid) {
+                                                        document.getElementById("messagebox").style.display = "none"
+                                                    }
+                                                } else {
+                                                    document.getElementById("messagebox").style.display = "block"
                                                 }
-                                            } else {
-                                                document.getElementById("messagebox").style.display = "block"
                                             }
-                                        }
-                                    })
+                                        })
+                                    }
                                 }
                             }
                         }
@@ -223,10 +222,11 @@ auth.onAuthStateChanged((user) => {
                     console.log(error)
                 });
 
+            let user_msgs_allowed = true
             message_form.addEventListener('submit', e => {
                 e.preventDefault()
 
-                if (message_form.msg.value != "" && message_form.msg.value != " " && message_form.msg.value != null && message_form.msg.value) {
+                if (message_form.msg.value != "" && message_form.msg.value != " " && message_form.msg.value != null && message_form.msg.value && user_msgs_allowed == true) {
                     db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).get().then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
                             let data = doc.data()
@@ -235,6 +235,7 @@ auth.onAuthStateChanged((user) => {
                                 let _data = doc.data()
 
                                 if (data.name == user.displayName) {
+                                    user_msgs_allowed = false
                                     data.server_verified = true
                                     data.sent.push(message_form.msg.value + "!DISPUTE_STORE/dispute_token:yXA?U::/" + getString(8) + "!DISPUTE_STORE/dispute_token:dwA?U::/" + _data.total_msgs)
 
@@ -243,6 +244,10 @@ auth.onAuthStateChanged((user) => {
                                     }).catch((error) => {
                                         console.log(error)
                                     })
+
+                                    setTimeout(() => {
+                                        user_msgs_allowed = true
+                                    }, 1000);
                                 }
 
                                 setTimeout(() => {
