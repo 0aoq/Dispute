@@ -258,6 +258,10 @@
             font-size: 28px;
             font-weight: bold;
         }
+        
+        a {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -280,7 +284,15 @@
             <a id="newchannel__form" style="display: none;">
                 <form id="newchannel__form_set">
                     <p>Name</p>
-                    <input type="text" name="channel" autocomplete="off">
+                    <input type="text" name="channel" autocomplete="off" required>
+                    <p>Type</p>
+                    <select name="type" required aria-placeholder="Choose a channel type">
+                        <option selected disabled> 
+                            Choose a channel type
+                        </option> 
+                        <option>Chat</option>
+                        <option>Announcements</option>
+                    </select>
                     <button>Create</button>
                 </form>
             </a>
@@ -289,7 +301,8 @@
 
             <div class="panel-1" aria-label="user_section" id="user_info">
                 <h4>Loading...</h4>
-                <a aria-label="sign_out" class="btn" style="margin-left: 15px;">Sign Out</a>
+                <a aria-label="sign_out" class="btn" style="margin-left: 15px;" data-feather="log-out"></a>
+                <a class="btn" style="margin-left: 15px;" aria-label="account settings" data-feather="settings" onclick="open_settings_modal()"></a>
             </div>
         </div>
 
@@ -346,11 +359,24 @@
         </div>
     </div>
 
+    <div id="settings_modal" class="modal" style="overflow: hidden;">
+        <div class="modal-content">
+            <a class="close" id="join_server_close">&times;</a>
+            <br>
+            <form id="signupform" style="width: 100%;">
+                <p style="color: white; text-align: left;">Change Email</p>
+                <input type="email" name="email" autocomplete="off" required>
+                <button>Change</button>
+            </form>
+        </div>
+    </div>
+
     <script src="src/firebase/firebase-init.js"></script>
     <script src="src/firebase/users/auth.js"></script>
     <script src="src/firebase/firestore/data.js"></script>
 
     <script>
+        feather.replace();
         // Message Sending
         const message_form = document.getElementById("message_form")
         let shift = false
@@ -386,6 +412,8 @@
                 server_modal.style.display = "none";
             } else if (event.target == new_server_modal) {
                 new_server_modal.style.display = "none";
+            } else if (event.target == settings_modal) {
+                settings_modal.style.display = "none"
             }
         }
 
@@ -398,6 +426,17 @@
 
         new_server_close.onclick = function() {
             new_server_modal.style.display = "none";
+        }
+
+        let settings_modal = document.getElementById("settings_modal");
+        var settings_modal_close = document.getElementById("settings_modal_close");
+
+        function open_settings_modal() {
+            settings_modal.style.display = "grid";
+        }
+
+        new_server_close.onclick = function() {
+            settings_modal.style.display = "none";
         }
 
         // Invites
