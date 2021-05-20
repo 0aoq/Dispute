@@ -144,8 +144,8 @@ datalist {
     .messages {
         width: max-content;
     }
-    #sidebar-2 {
-        display: none;
+    .sidebar-2 {
+        width: 100vw;
     }
     #server_info {
         width: 83.5vw;
