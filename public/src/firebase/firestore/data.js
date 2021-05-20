@@ -17,7 +17,7 @@ function switch_channel(channel) {
 
 function switch_server(server) {
     window.localStorage.setItem("current_server", server)
-    window.localStorage.setItem("current_channel", "general")
+    window.localStorage.setItem("current_channel", "Switch to a channel to use Dispute")
     window.location.reload()
 }
 
