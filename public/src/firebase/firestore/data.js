@@ -106,9 +106,9 @@ auth.onAuthStateChanged((user) => {
             document.title = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0] + " - On Dispute"
 
             document.getElementById("server_name").addEventListener('click', () => {
-                if (confirm("Copy direct server link instead of server join code?")) {
+                if (confirm("Click confirm to copy server link, cancel to just copy code")) {
                     document.getElementById("copy_server_code").style.display = "block"
-                    document.getElementById("copy_server_code").value = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[1]
+                    document.getElementById("copy_server_code").value = "https://dispute-app.web.app/app?" + window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[1]
                     document.getElementById("copy_server_code").select()
                     document.getElementById("copy_server_code").setSelectionRange(0, 99999)
                     document.execCommand("copy")
@@ -116,7 +116,7 @@ auth.onAuthStateChanged((user) => {
                     alert("Copied Server Code: " + document.getElementById("copy_server_code").value)
                 } else {
                     document.getElementById("copy_server_code").style.display = "block"
-                    document.getElementById("copy_server_code").value = "https://dispute-app.web.app/app?" + window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[1]
+                    document.getElementById("copy_server_code").value = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[1]
                     document.getElementById("copy_server_code").select()
                     document.getElementById("copy_server_code").setSelectionRange(0, 99999)
                     document.execCommand("copy")
