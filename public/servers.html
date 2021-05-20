@@ -415,7 +415,7 @@
 
                             if (doc_code == id) {
                                 for (datapoint of data.users) {
-                                    if (!datapoint == user.uid) {
+                                    if (datapoint != user.uid) {
                                         data.users.push(user.uid)
                                         db.collection("servers").doc(doc.id).set(data).then(() => {
                                             console.log("Written data.")
