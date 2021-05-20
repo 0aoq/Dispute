@@ -399,15 +399,17 @@
                             let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
 
                             if (doc_code == id) {
-                                data.users.push(user.uid)
-                                db.collection("servers").doc(doc.id).set(data).then(() => {
-                                    console.log("Written data.")
-                                    window.localStorage.setItem("current_server", doc.id)
-                                    window.localStorage.setItem("current_channel", "general")
-                                    window.location = "servers.html"
-                                }).catch(error => {
-                                    console.log(error)
-                                })
+                                if (!data.users[user.uid]) {
+                                    data.users.push(user.uid)
+                                    db.collection("servers").doc(doc.id).set(data).then(() => {
+                                        console.log("Written data.")
+                                        window.localStorage.setItem("current_server", doc.id)
+                                        window.localStorage.setItem("current_channel", "general")
+                                        window.location = "servers.html"
+                                    }).catch(error => {
+                                        console.log(error)
+                                    })
+                                }
                             }
                         })
                     })
