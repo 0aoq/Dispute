@@ -1,0 +1,148 @@
+.pad-center-1_2 {
+    padding-left: 1.2rem !important;
+    padding-right: 1.2rem !important;
+}
+
+.pad-center-2_5 {
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
+}
+
+.pad-right-16px {
+    padding-right: 16px;
+}
+
+.ml-50px {
+    margin-left: 50px !important;
+}
+
+.mr-50px {
+    margin-right: 50px !important;
+}
+
+.mt-25px {
+    margin-top: 25px !important;
+}
+
+.mt-50px {
+    margin-top: 50px !important;
+}
+
+.mt-125px {
+    margin-top: 112px !important;
+}
+
+.mt-112px {
+    margin-top: 112px !important;
+}
+
+.mt-224px {
+    margin-top: 224px !important;
+}
+
+.mb-25px {
+    margin-bottom: 25px !important;
+}
+
+.mb-50px {
+    margin-bottom: 50px !important;
+}
+
+.mb-125px {
+    margin-bottom: 224px !important;
+}
+
+.mb-112px {
+    margin-bottom: 112px !important;
+}
+
+.mb-224px {
+    margin-bottom: 224px !important;
+}
+
+.wd-full {
+    width: 100% !important;
+}
+
+@media screen and (max-width: 500px) {
+    .wd-full.wd-shrink {
+        width: 80vw !important;
+    }
+}
+
+.wd-1-3rd {
+    width: 33.33333%;
+}
+
+.wd-1-half {
+    width: 50%;
+}
+
+.grid {
+    display: grid !important;
+}
+
+.grid.grid-place-center {
+    place-items: center;
+}
+
+.flex {
+    display: flex !important;
+}
+
+.flex.flex-just-center {
+    justify-content: center !important;
+}
+
+.flex.flex-wrap {
+    flex-wrap: wrap !important;
+}
+
+.flex.flex-row {
+    flex-direction: row !important;
+}
+
+.flex.flex-just-between {
+    justify-content: space-between !important;
+}
+
+.flex.flex-column {
+    flex-direction: column !important;
+}
+
+@media screen and (min-width: 601px) {
+    .title {
+        font-size: 60px !important;
+    }
+    .heading {
+        font-size: 30px !important;
+    }
+    .text {
+        font-size: 25px !important;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .title {
+        font-size: 30px !important;
+    }
+    .heading {
+        font-size: 20px !important;
+    }
+    .text {
+        font-size: 15px !important;
+    }
+}
+
+.container-xl {
+    max-width: 1280px;
+}
+
+.mar-lr-auto {
+    margin-right: auto !important;
+    margin-left: auto !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
