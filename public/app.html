@@ -70,6 +70,13 @@
             <a id="server_info__channel_name" class="no_effect">Loading...</a>
 
             <div class="messages">
+                <ul style="list-style: none; margin-top: 50px;">
+                    <li style="text-align: center; color: white; margin-bottom: 20px;">
+                        <h2 id="channel__name__2"></h2><br>
+                        <h3 style="color: lightgray;">Start a conversation</h3>
+                    </li>
+                </ul>
+
                 <ul style="list-style: none; height: 82vh; overflow: hidden auto;" id="msgs"></ul>
 
                 <ul style="list-style: none;">
@@ -130,6 +137,8 @@
             </form>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="src/firebase/firebase-init.js"></script>
     <script src="src/firebase/users/auth.js"></script>
@@ -240,8 +249,10 @@
         function togglesidebar() {
             if (document.querySelector(".sidebar-2").style.display === "none") {
                 document.querySelector(".sidebar-2").style.display = "block"
+                document.querySelector("#server_info").style.width = "83.5vw"
             } else {
                 document.querySelector(".sidebar-2").style.display = "none"
+                document.querySelector("#server_info").style.width = "100vw"
             }
         }
     </script>
