@@ -103,6 +103,7 @@ auth.onAuthStateChanged((user) => {
         if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel") && window.localStorage.getItem("current_server")) {
             document.getElementById("server_info__channel_name").innerText = "#" + window.localStorage.getItem("current_channel").split("!:DISPUTE_CHANNEL::GET::!?")[0]
             document.getElementById("server_name").innerText = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0]
+            document.getElementById("channel__name__2").innerText = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0] + "/#" + window.localStorage.getItem("current_channel").split("!:DISPUTE_CHANNEL::GET::!?")[0]
             document.title = window.localStorage.getItem("current_server").split("!:DISPUTE_SERVER::GET::!?")[0] + " - On Dispute"
 
             document.getElementById("server_name").addEventListener('click', () => {
@@ -185,17 +186,17 @@ auth.onAuthStateChanged((user) => {
                 })
             }
 
-            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`)
+            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).limit(6)
                 .onSnapshot((querySnapshot) => { // Add real time support
                     querySnapshot.forEach((doc) => {
                         let data = doc.data()
 
                         if (doc.id != "info") {
                             for (datapoint of data.sent) {
-                                let msg = datapoint.split("!DISPUTE_STORE/dispute_token:yXA?U::/")[0]
-                                let code = datapoint.split("!DISPUTE_STORE/dispute_token:yXA?U::/")[1]
-                                let int = datapoint.split("!DISPUTE_STORE/dispute_token:dwA?U::/")[1]
-                                if (!document.getElementById(data.name + ":" + datapoint + ":" + code) && datapoint.split("!DISPUTE_STORE/dispute_token:yXA?U::/")[2] == null) {
+                                let msg = datapoint.content
+                                let code = datapoint.token
+                                let int = datapoint.order
+                                if (!document.getElementById(data.name + ":" + code)) {
                                     msg = msg.replaceAll('"', "&quot;")
 
                                     msg = msg.replaceAll('# ', "")
@@ -206,7 +207,7 @@ auth.onAuthStateChanged((user) => {
 
                                     document.getElementById("msgs").insertAdjacentHTML("beforeend", `
                     
-                                        <li class="card message" style="margin-top: 5px; width: 99%; order: ${int};" id='${data.name + ":" + datapoint + ":" + code}'>
+                                        <li class="card message" style="margin-top: 5px; width: 99%; order: ${int};" id='${data.name + ":" + code}'>
                                             <h5 style="display: inline; user-select: none;">${data.name}</h5>
                                             <span style="margin-left: 20px;">${marked(msg)}</span>
                                         </li>
@@ -224,6 +225,8 @@ auth.onAuthStateChanged((user) => {
                                     for (var i = 0, len = p.length; i < len; i++) {
                                         p[i].style.display = "inline"
                                     }
+
+                                    $("#msgs").animate({ scrollTop: $('#msgs').prop("scrollHeight") }, 1000);
                                 }
                             }
                         } else {
@@ -266,7 +269,12 @@ auth.onAuthStateChanged((user) => {
                                 if (data.name == user.displayName) {
                                     user_msgs_allowed = false
                                     data.server_verified = true
-                                    data.sent.push(message_form.msg.value + "!DISPUTE_STORE/dispute_token:yXA?U::/" + getString(8) + "!DISPUTE_STORE/dispute_token:dwA?U::/" + _data.total_msgs)
+
+                                    data.sent.push({
+                                        content: message_form.msg.value,
+                                        token: getString(12),
+                                        order: _data.total_msgs
+                                    })
 
                                     db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.uid).set(data).then(() => {
                                         console.log("Written data.")
