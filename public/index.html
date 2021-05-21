@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dispute - A place for conversations</title>
+    <title>Dispute - A place for community</title>
 
     <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="src/styles.css">
+    <link rel="stylesheet" href="src/css/whitespace.css">
     <link rel="shortcut icon" type="image/jpg" href="src/dispute_favicon.svg" />
 
     <style>
@@ -26,16 +27,19 @@
 </head>
 
 <body style="color: white;">
-    <div class="container">
-        <div class="card">
-            <h1><a href="https://github.com/0aoq/Dispute">🦜 Dispute</a> is a place for invite only online conversations</h1>
-            <ul style="font-size: 3vh;">
-                <li><i data-feather="github" style="margin-right: 10px;"></i><a href="https://github.com/0aoq/Dispute">Open Source</a></li>
-                <li><i data-feather="lock" style="margin-right: 10px;"></i>Private</li>
-                <li><i data-feather="shield" style="margin-right: 10px;"></i>Secure</li>
+    <div class="wd-full wd-shrink grid grid-place-center">
+        <div class="container-xl mb-112px flex flex-just-center flex-column mt-112px">
+            <h1 class="title text-center mar-lr-auto mb-50px">Dispute is for open source, private communities.</h1>
+            <button onclick="window.location = 'auth.html'" class="wd-1-half text-center mar-lr-auto">Join Dispute</button>
+        </div>
+
+        <div class="card mb-25px wd-1-half">
+            <h1 class="heading text-center mt-25px">Dispute Is...</h1>
+            <ul style="font-size: 3vh; list-style: none;" class="pad-center-2_5">
+                <li class="text"><a href="https://github.com/0aoq/Dispute">Open Source</a></li>
+                <li class="text">Private</li>
+                <li class="text">Secure</li>
             </ul>
-            <p style="font-size: 2.5vh;  text-align: center;">Join today to start connecting to friends and communites through invite only servers!</p>
-            <button onclick="window.location = 'auth.html'">Join Dispute</button>
         </div>
     </div>
 
