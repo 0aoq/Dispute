@@ -8,12 +8,28 @@
     padding-right: 2.5rem !important;
 }
 
+.pad-full-1_2 {
+    padding: 1.2rem !important;
+}
+
+.pad-full-2_5 {
+    padding: 2.5rem !important;
+}
+
 .pad-right-16px {
     padding-right: 16px;
 }
 
+.ml-25px {
+    margin-left: 25px !important;
+}
+
 .ml-50px {
     margin-left: 50px !important;
+}
+
+.ml-25px {
+    margin-right: 25px !important;
 }
 
 .mr-50px {
@@ -61,12 +77,12 @@
 }
 
 .wd-full {
-    width: 100% !important;
+    width: 80% !important;
 }
 
 @media screen and (max-width: 500px) {
-    .wd-full.wd-shrink {
-        width: 80vw !important;
+    .wd-full {
+        width: 100% !important;
     }
 }
 
@@ -77,6 +93,72 @@
 .wd-1-half {
     width: 50%;
 }
+
+@media screen and (min-width: 601px) {
+    .title {
+        font-size: 60px !important;
+    }
+    .heading {
+        font-size: 30px !important;
+    }
+    .text {
+        font-size: 25px !important;
+    }
+    .text.small {
+        font-size: 20px !important;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .title {
+        font-size: 30px !important;
+    }
+    .heading {
+        font-size: 20px !important;
+    }
+    .text {
+        font-size: 15px !important;
+    }
+    .text.small {
+        font-size: 15px !important;
+    }
+}
+
+.container-xl {
+    max-width: 1280px;
+}
+
+.mar-lr-auto {
+    margin-right: auto !important;
+    margin-left: auto !important;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+
+/* Hover */
+
+.onhover {
+    transition: transform 0.25s, box-shadow 0.2s !important;
+}
+
+.onhover.translate:hover {
+    transform: translate(0, -5px);
+}
+
+.onhover.scale:hover {
+    transform: scale(1.05);
+}
+
+.onhover.shadow:hover {
+    -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
+    box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
+}
+
+
+/* Display */
 
 .grid {
     display: grid !important;
@@ -92,6 +174,10 @@
 
 .flex.flex-just-center {
     justify-content: center !important;
+}
+
+.flex.flex-just-self-left {
+    justify-self: left !important;
 }
 
 .flex.flex-wrap {
@@ -110,39 +196,11 @@
     flex-direction: column !important;
 }
 
-@media screen and (min-width: 601px) {
-    .title {
-        font-size: 60px !important;
-    }
-    .heading {
-        font-size: 30px !important;
-    }
-    .text {
-        font-size: 25px !important;
-    }
+.sticky {
+    display: sticky;
 }
 
-@media screen and (max-width: 600px) {
-    .title {
-        font-size: 30px !important;
-    }
-    .heading {
-        font-size: 20px !important;
-    }
-    .text {
-        font-size: 15px !important;
-    }
-}
-
-.container-xl {
-    max-width: 1280px;
-}
-
-.mar-lr-auto {
-    margin-right: auto !important;
-    margin-left: auto !important;
-}
-
-.text-center {
-    text-align: center !important;
+.box-shadow {
+    -webkit-box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 0.5px 9px 0 rgba(0, 0, 0, 0.13);
+    box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.1), 0 3px 5px 0 rgba(0, 0, 0, 0.05), 0 1px 9px 0 rgba(0, 0, 0, 0.13);
 }
