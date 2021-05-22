@@ -7,45 +7,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dispute - A place for community</title>
 
-    <script src="https://unpkg.com/feather-icons"></script>
-    <link rel="stylesheet" href="src/styles.css">
+    <link rel="stylesheet" href="src/css/index.css">
     <link rel="stylesheet" href="src/css/whitespace.css">
-    <link rel="shortcut icon" type="image/jpg" href="src/dispute_favicon.svg" />
-
-    <style>
-        li {
-            transition: background 0.2s;
-            border-radius: .2em;
-            padding: 5px;
-        }
-        
-        li:hover {
-            list-style: circle;
-            background: #192127;
-        }
-    </style>
 </head>
 
-<body style="color: white;">
-    <div class="wd-full wd-shrink grid grid-place-center">
-        <div class="container-xl mb-112px flex flex-just-center flex-column mt-112px">
-            <h1 class="title text-center mar-lr-auto mb-50px">Dispute is for open source, private communities.</h1>
-            <button onclick="window.location = 'auth.html'" class="wd-1-half text-center mar-lr-auto">Join Dispute</button>
+<body style="overflow: hidden;">
+    <nav class="sticky pad-full-1_2 box-shadow mb-25px text-center">
+        <div class="flex flex-just-center" style="gap: 1.5em;">
+            <span class="text small">Dispute</span>
+            <a href="index" class="text small">Home</a>
+            <a href="app" class="text small">App</a>
         </div>
+    </nav>
 
-        <div class="card mb-25px wd-1-half">
-            <h1 class="heading text-center mt-25px">Dispute Is...</h1>
-            <ul style="font-size: 3vh; list-style: none;" class="pad-center-2_5">
-                <li class="text"><a href="https://github.com/0aoq/Dispute">Open Source</a></li>
-                <li class="text">Private</li>
-                <li class="text">Secure</li>
-            </ul>
-        </div>
+    <div class="container-xl flex pad-center-1_2 text-center flex-just-center mar-lr-auto mb-50px">
+        <p class="title">Welcome To <b>Dispute</b></p>
     </div>
 
-    <script>
-        feather.replace()
-    </script>
-</body>
+    <div class="flex pad-center-1_2 text-center flex-just-center mar-lr-auto container-xl" style="gap: 1.5em; margin-bottom: 1.5em;">
+        <div class="card onhover translate shadow maxcontent">
+            <h2 class="heading">Private Communites</h2>
+        </div>
+
+        <a class="card onhover translate shadow maxcontent heading" style="color: white;">
+            Open Source
+        </a>
+    </div>
+
+    <div class="flex pad-center-1_2 text-center flex-just-center mar-lr-auto mb-50px container-xl" style="gap: 1.5em;">
+        <a class="card box-shadow onhover translate maxcontent heading" href="auth">
+            Join Dispute
+        </a>
+    </div>
 
 </html>
