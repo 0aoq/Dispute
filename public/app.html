@@ -34,6 +34,7 @@
             <a style="margin: 0;" class="server_icon" onclick="togglesidebar()" id="mobile_sidebar"><i data-feather="menu"></i></a>
             <a style="margin: 0;" class="server_icon" onclick="open_new_server_modal()">Join</a>
             <a style="margin: 0; margin-bottom: 20px;" class="server_icon" onclick="open_server_modal()">New</a>
+            <a style="background-image: url(); background: rgb(73, 96, 114); margin: 0; font-size: 1.5vh" class="server_icon" onclick="switch_dm('Home, Home, Home, Home')">DMs</a>
 
             <div id="servers_list"></div>
         </div>
@@ -127,6 +128,22 @@
         </div>
     </div>
 
+    <div id="dm_modal" class="modal box-shadow" style="overflow: hidden;">
+        <div class="modal-content">
+            <a class="close" id="dm_modal_close">&times;</a>
+            <br>
+            <form id="dm_form">
+                <h2>Direct Message</h2>
+
+                <p style="color: white; text-align: left;">User Id</p>
+                <input type="text" name="userid" autocomplete="off">
+
+                <br>
+                <button>Open DM</button>
+            </form>
+        </div>
+    </div>
+
     <div id="settings_modal" class="modal" style="overflow: hidden;">
         <div class="modal-content">
             <a class="close" id="settings_modal_close">&times;</a>
@@ -160,7 +177,7 @@
 
                 setTimeout(() => {
                     shift = false
-                }, 50);
+                }, 100);
             }
         })
 
@@ -184,6 +201,8 @@
                 new_server_modal.style.display = "none";
             } else if (event.target == settings_modal) {
                 settings_modal.style.display = "none"
+            } else if (event.target == dm_modal) {
+                dm_modal.style.display = "none"
             }
         }
 
@@ -207,6 +226,17 @@
 
         settings_modal_close.onclick = function() {
             settings_modal.style.display = "none";
+        }
+
+        let dm_modal = document.getElementById("dm_modal");
+        var dm_modal_close = document.getElementById("dm_modal_close");
+
+        function open_dm_modal() {
+            dm_modal.style.display = "grid";
+        }
+
+        settings_modal_close.onclick = function() {
+            dm_modal.style.display = "none";
         }
 
         // Invites
