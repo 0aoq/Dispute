@@ -175,7 +175,7 @@ auth.onAuthStateChanged((user) => {
             if (window.localStorage.getItem("current_channel") != "Dispute Home") {
                 db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.uid).get().then((doc) => {
                     if (doc.exists) {
-                        console.log("User channel profile already exists.")
+                        log("Currently signed in user already has a profile in this server.", console_styles.warning)
                     } else {
                         db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc(user.uid).set({
                             name: user.displayName,
@@ -192,6 +192,7 @@ auth.onAuthStateChanged((user) => {
                         let data = doc.data()
 
                         if (doc.id != "info") {
+                            log("Loading messages from " + data.name, console_styles.base)
                             for (datapoint of data.sent) {
                                 let msg = datapoint.content
                                 let code = datapoint.token
@@ -204,6 +205,8 @@ auth.onAuthStateChanged((user) => {
                                     msg = msg.replaceAll('### ', "")
                                     msg = msg.replaceAll('#### ', "")
                                     msg = msg.replaceAll('##### ', "")
+
+                                    // TODO: delete_msg(data.uid, codes)
 
                                     document.getElementById("msgs").insertAdjacentHTML("beforeend", `
                     
