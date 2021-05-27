@@ -160,7 +160,7 @@
 
                 setTimeout(() => {
                     shift = false
-                }, 100);
+                }, 50);
             }
         })
 
@@ -255,6 +255,29 @@
                 document.querySelector(".sidebar-2").style.display = "none"
                 document.querySelector("#server_info").style.width = "100vw"
             }
+        }
+
+        // console.log
+
+        let console_styles = {
+            base: [
+                "color: #fff",
+                "background-color: #444",
+                "padding: 2px 4px",
+                "border-radius: 2px"
+            ],
+            warning: [
+                "color: #eee",
+                "background-color: #ff4747"
+            ],
+            success: [
+                "background-color: green"
+            ]
+        }
+        let log = (text, extra = []) => {
+            let style = console_styles.base.join(';') + ';';
+            style += extra.join(';');
+            console.log(`%c${text}`, style);
         }
     </script>
 </body>
