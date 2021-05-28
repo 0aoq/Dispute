@@ -32,8 +32,8 @@
     <div class="container-2">
         <div class="sidebar menu" id="sidebar" style="width: 75px;">
             <a style="margin: 0;" class="server_icon" onclick="togglesidebar()" id="mobile_sidebar"><i data-feather="menu"></i></a>
-            <a style="margin: 0;" class="server_icon" onclick="open_new_server_modal()">Join</a>
-            <a style="margin: 0; margin-bottom: 20px;" class="server_icon" onclick="open_server_modal()">New</a>
+            <a style="margin: 0;" class="server_icon" onclick="open_modal('join_server_modal')">Join</a>
+            <a style="margin: 0; margin-bottom: 20px;" class="server_icon" onclick="open_modal('server_modal')">New</a>
             <a style="background-image: url(); background: rgb(73, 96, 114); margin: 0; font-size: 1.5vh" class="server_icon" onclick="switch_dm('Home, Home, Home, Home')">DMs</a>
 
             <div id="servers_list"></div>
@@ -64,7 +64,7 @@
             <div class="panel-1" aria-label="user_section" id="user_info">
                 <h4>Loading...</h4>
                 <a aria-label="sign_out" class="btn" style="margin-left: 15px;"><i data-feather="log-out"></i></a>
-                <a class="btn" style="margin-left: 15px;" aria-label="account settings" onclick="open_settings_modal()"><i data-feather="settings"></i></a>
+                <a class="btn" style="margin-left: 15px;" aria-label="account settings" onclick="open_modal('settings_modal')"><i data-feather="settings"></i></a>
             </div>
         </div>
 
@@ -93,8 +93,11 @@
         </div>
     </div>
 
+    <!-- Modals -->
+
     <div id="server_modal" class="modal box-shadow" style="overflow: hidden;">
-        <div class="modal-content">
+        <div class="backdrop"></div>
+        <div class="modal-content onhover shadow translate">
             <a class="close" id="server_close">&times;</a>
             <br>
             <form id="new_server_form">
@@ -113,6 +116,7 @@
     </div>
 
     <div id="join_server_modal" class="modal box-shadow" style="overflow: hidden;">
+        <div class="backdrop"></div>
         <div class="modal-content">
             <a class="close" id="join_server_close">&times;</a>
             <br>
@@ -129,6 +133,7 @@
     </div>
 
     <div id="dm_modal" class="modal box-shadow" style="overflow: hidden;">
+        <div class="backdrop"></div>
         <div class="modal-content">
             <a class="close" id="dm_modal_close">&times;</a>
             <br>
@@ -145,6 +150,7 @@
     </div>
 
     <div id="settings_modal" class="modal" style="overflow: hidden;">
+        <div class="backdrop"></div>
         <div class="modal-content">
             <a class="close" id="settings_modal_close">&times;</a>
             <br>
@@ -181,62 +187,22 @@
             }
         })
 
-        // New Server Modal
+        // Modal
 
-        let server_modal = document.getElementById("server_modal");
-        var server_close = document.getElementsByClassName("close")[0];
+        function open_modal(modal_id) {
+            console.log(modal_id)
+            let _modal = document.getElementById(modal_id);
+            var _modal_close = document.querySelector(`#${modal_id} .modal-content .close`)
 
-        function open_server_modal() {
-            server_modal.style.display = "grid";
-        }
+            _modal.style.display = "grid";
 
-        server_close.onclick = function() {
-            server_modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == server_modal) {
-                server_modal.style.display = "none";
-            } else if (event.target == new_server_modal) {
-                new_server_modal.style.display = "none";
-            } else if (event.target == settings_modal) {
-                settings_modal.style.display = "none"
-            } else if (event.target == dm_modal) {
-                dm_modal.style.display = "none"
+            _modal_close.onclick = function() {
+                _modal.style.display = "none";
             }
-        }
 
-        let new_server_modal = document.getElementById("join_server_modal");
-        var new_server_close = document.getElementById("join_server_close");
-
-        function open_new_server_modal() {
-            new_server_modal.style.display = "grid";
-        }
-
-        new_server_close.onclick = function() {
-            new_server_modal.style.display = "none";
-        }
-
-        let settings_modal = document.getElementById("settings_modal");
-        var settings_modal_close = document.getElementById("settings_modal_close");
-
-        function open_settings_modal() {
-            settings_modal.style.display = "grid";
-        }
-
-        settings_modal_close.onclick = function() {
-            settings_modal.style.display = "none";
-        }
-
-        let dm_modal = document.getElementById("dm_modal");
-        var dm_modal_close = document.getElementById("dm_modal_close");
-
-        function open_dm_modal() {
-            dm_modal.style.display = "grid";
-        }
-
-        settings_modal_close.onclick = function() {
-            dm_modal.style.display = "none";
+            document.querySelector(`#${modal_id} .backdrop`).addEventListener('click', () => {
+                _modal.style.display = "none"
+            })
         }
 
         // Invites
