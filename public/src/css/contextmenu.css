@@ -1,0 +1,29 @@
+.context-menu {
+    width: 240px;
+    position: absolute;
+    display: none;
+    z-index: 5;
+    border-radius: 0.4rem;
+    background: #1e262e;
+}
+
+.context-menu .menu-options {
+    list-style: none;
+    padding: 8px;
+    margin: 0;
+}
+
+.context-menu .menu-options .menu-option {
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 12px 0.8rem;
+    margin: 0.1rem;
+    cursor: pointer;
+    transition: all 0.1s !important;
+    border-radius: 0.4em;
+}
+
+.context-menu .menu-options .menu-option:hover {
+    background: #ff4747;
+}
