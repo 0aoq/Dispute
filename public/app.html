@@ -328,7 +328,7 @@
                 for (i = 0; i < e.target.children.length; i++) {
                     if (e.target.children[i].nodeName == "DATALIST") { // get the datalist from inside the dm
                         document.querySelector(".menu-options").insertAdjacentHTML("beforeend", `
-                            <li class="menu-option onhover shadow" onmousedown="delete_dm_trigger('${e.target.children[i].innerHTML}')">Delete</li>
+                            <li class="menu-option onhover shadow" onmousedown="delete_dm('${e.target.children[i].innerHTML}')">Delete</li>
                         `)
                     }
                 }
@@ -344,10 +344,6 @@
 
             return false;
         });
-
-        function delete_dm_trigger(id) {
-            delete_dm(id)
-        }
     </script>
 </body>
 
