@@ -315,6 +315,7 @@ auth.onAuthStateChanged((user) => {
 
                                 db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").get().then((_doc) => {
                                     let _data = _doc.data()
+                                    log("Working.")
 
                                     if (doc.id == "messages") {
                                         user_msgs_allowed = false
@@ -378,6 +379,10 @@ auth.onAuthStateChanged((user) => {
                         rules: [
                             "allow_write_from: " + locked
                         ]
+                    })
+
+                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${channelname}`).doc("messages").set({
+                        sent: []
                     })
 
                     db.doc(`servers/${window.localStorage.getItem("current_server")}`).get().then((doc) => {
