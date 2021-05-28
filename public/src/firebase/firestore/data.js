@@ -438,7 +438,7 @@ auth.onAuthStateChanged((user) => {
                     querySnapshot.forEach((doc) => {
                         document.getElementById("channels").innerHTML = ""
                         document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                            <a style="display: flex;" class="channel" onclick="open_dm_modal()">
+                            <a style="display: flex;" class="channel" onclick="open_modal('dm_modal')">
                                 <i data-feather="plus-square" style="margin-right: 10px;"></i> New DM
                             </a> 
                         `)
@@ -451,16 +451,18 @@ auth.onAuthStateChanged((user) => {
                         if (user.uid == dm_user_1) {
                             document.getElementById("channels").insertAdjacentHTML("beforeend", `
                             <a style="display: flex;" class="channel" onclick="switch_dm('${doc.id}')">
-                                <i data-feather="plus-square" style="margin-right: 10px;"></i> ${dm_userName_2}
+                                <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_2}
                             </a> 
                         `)
                         } else {
                             document.getElementById("channels").insertAdjacentHTML("beforeend", `
                             <a style="display: flex;" class="channel" onclick="switch_dm('${doc.id}')">
-                                <i data-feather="plus-square" style="margin-right: 10px;"></i> ${dm_userName_1}
+                                <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_1}
                             </a> 
                         `)
                         }
+
+                        feather.replace()
                     })
                 })
 
