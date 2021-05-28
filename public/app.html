@@ -25,7 +25,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
 </head>
 
-<body style="height: 100%; display: block; background: var(--background-darkest);">
+<body style="height: 100%; display: block; background: var(--background-darkest); overflow: hidden;">
     <datalist id="auth_required">true</datalist>
     <datalist id="page">servers</datalist>
     <input type="text" style="display: none;" id="copy_server_code">
@@ -167,6 +167,7 @@
     <script src="src/firebase/firebase-init.js"></script>
     <script src="src/firebase/users/auth.js"></script>
     <script src="src/firebase/firestore/data.js"></script>
+    <script src="src/firebase/firestore/directmessage.js"></script>t
 
     <script>
         feather.replace();
