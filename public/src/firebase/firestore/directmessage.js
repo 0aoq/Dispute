@@ -3,6 +3,14 @@ function switch_dm(dm) {
     window.location.reload()
 }
 
+function delete_dm(dm) {
+    db.collection("directMessages").doc(dm).delete().then(() => {
+        log("Deleted direct message.", console_styles.success)
+    }).catch((error) => {
+        log(error, console_styles.warning)
+    })
+}
+
 auth.onAuthStateChanged((user) => {
     if (user) {
         if (!window.localStorage.getItem("current_dm") != "") {
@@ -52,16 +60,18 @@ auth.onAuthStateChanged((user) => {
 
                         if (user.uid == dm_user_1) {
                             document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                            <a style="display: flex;" class="channel" onclick="switch_dm('${doc.id}')">
-                                <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_2}
-                            </a> 
-                        `)
+                                <a style="display: flex;" class="channel dm" onclick="switch_dm('${doc.id}')">
+                                    <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_2}
+                                    <datalist>${doc.id}</datalist>
+                                </a> 
+                            `)
                         } else {
                             document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                            <a style="display: flex;" class="channel" onclick="switch_dm('${doc.id}')">
-                                <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_1}
-                            </a> 
-                        `)
+                                <a style="display: flex;" class="channel dm" onclick="switch_dm('${doc.id}')">
+                                    <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_1}
+                                    <datalist>${doc.id}</datalist>
+                                </a> 
+                            `)
                         }
 
                         feather.replace()
