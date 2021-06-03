@@ -2,7 +2,7 @@ const db = firebase.firestore()
 
 const getString = function(length) {
     let result = []
-    let characters = '!?@!??!!?@!?#$%@!?#ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let characters = '!@!!!@!$%@!ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     let charactersLength = characters.length
     for (let i = 0; i < length; i++) {
         result.push(characters.charAt(Math.floor(Math.random() * charactersLength)))
@@ -30,6 +30,7 @@ auth.onAuthStateChanged((user) => {
                     db.collection("users").doc("info").get().then((_doc) => {
                         db.collection("users").doc(user.uid).set({
                             friends: [],
+                            badges: [],
                             userId: _doc.data().total,
                             name: user.displayName,
                             about: window.localStorage.getItem("user__profileInfo_localSave:about")
@@ -82,7 +83,7 @@ auth.onAuthStateChanged((user) => {
             new_server_form.addEventListener('submit', e => {
                 e.preventDefault()
 
-                let new_server_name = new_server_form.servername.value + "!:DISPUTE_SERVER::GET::!?" + getString(12)
+                let new_server_name = new_server_form.servername.value + "!:DISPUTE_SERVER::GET::!?" + getString(25)
                 db.collection("servers").doc(new_server_name).set({
                     owner: user.uid,
                     channels: [],
