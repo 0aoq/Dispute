@@ -5,30 +5,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dispute - A place for conversations</title>
+    <title>Page not found - Dispute</title>
 
-    <link rel="stylesheet" href="src/styles.css">
+    <link rel="shortcut icon" type="image/svg" href="src/dispute_favicon.svg" />
 
-    <style>
-        li {
-            transition: background 0.2s;
-            border-radius: .2em;
-            padding: 5px;
-        }
-        
-        li:hover {
-            list-style: circle;
-            background: #192127;
-        }
-    </style>
+    <link rel="stylesheet" href="src/css/index.css">
+    <link rel="stylesheet" href="src/css/whitespace.css">
 </head>
 
-<body style="color: white;">
-    <div class="container">
-        <div class="card">
-            <p style="font-size: 2.5vh;  text-align: center;">404 - Page Not Found</p>
-            <button onclick="window.location = 'auth.html'">Open Dispute</button>
+<body style="overflow: hidden;">
+    <nav class="sticky pad-full-1_2 box-shadow mb-25px text-center">
+        <div class="flex flex-just-center" style="gap: 1.5em;">
+            <span class="text small">Dispute</span>
+            <a href="index" class="text small">Home</a>
+            <a href="app" class="text small">App</a>
         </div>
+    </nav>
+
+    <div class="container-xl flex pad-center-1_2 text-center flex-just-center mar-lr-auto mb-25px">
+        <p class="title"><b>404</b> - Page not found</p>
+    </div>
+
+    <div class="flex pad-center-1_2 text-center flex-just-center mar-lr-auto container-xl" style="gap: 1.5em;">
+        <p class="text small">The requested page doesn't exist, or couldn't be loaded for an unknown reason.</p>
+    </div>
+
+    <div class="flex pad-center-1_2 text-center flex-just-center mar-lr-auto mb-50px container-xl" style="gap: 1.5em;">
+        <a class="card box-shadow onhover translate maxcontent heading wd-full" href="auth">
+            Open Dispute
+        </a>
     </div>
 </body>
 
