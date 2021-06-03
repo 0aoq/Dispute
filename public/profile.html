@@ -5,19 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="favicon">
-    <title>Viewing Dispute</title>
+    <title>Viewing profile - Dispute</title>
 
-    <link rel="stylesheet" href="src/styles.css">
-    <link rel="stylesheet" href="src/app.css">
+    <link rel="shortcut icon" type="image/svg" href="src/dispute_favicon.svg" />
+
+    <link rel="stylesheet" href="src/css/index.css">
     <link rel="stylesheet" href="src/css/whitespace.css">
-    <link rel="stylesheet" href="src/css/contextmenu.css">
 
-    <script src="https://c-zero.web.app/js/brickjs.js"></script>
-
-    <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-    <link rel="shortcut icon" type="image/jpg" href="src/dispute_favicon.svg" />
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
@@ -26,21 +21,27 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
 </head>
 
-<body style="height: 100%; display: block; background: var(--background-darkest); overflow: hidden;">
+<body style="overflow: hidden;">
     <datalist id="auth_required">false</datalist>
     <datalist id="page">profile</datalist>
 
-    <!-- Context Menu -->
-    <div class="context-menu onhover shadow">
-        <ul class="menu-options"></ul>
-    </div>
+    <nav class="sticky pad-full-1_2 box-shadow mb-25px text-center">
+        <div class="flex flex-just-center" style="gap: 1.5em;">
+            <span class="text small">Dispute</span>
+            <a href="index" class="text small">Home</a>
+            <a href="app" class="text small">App</a>
+        </div>
+    </nav>
 
-    <div class="container2">
-        <div class="grid grid-place-center" style="height: 100vh;">
-            <div class="card">
-                <h2 class="heading">User doesn't exist</h2>
-                <button onclick="window.location = 'app'">Open Dispute</button>
-            </div>
+    <div class="container-2">
+        <div class="container-xl flex pad-center-1_2 text-center flex-just-center mar-lr-auto mb-25px">
+            <p class="title">User not found.</p>
+        </div>
+
+        <div class="flex pad-center-1_2 text-center flex-just-center mar-lr-auto mb-50px container-xl" style="gap: 1.5em;">
+            <a class="card box-shadow onhover translate maxcontent heading wd-full" href="auth">
+                Open Dispute
+            </a>
         </div>
     </div>
 
@@ -74,67 +75,6 @@
             style += extra.join(';');
             console.log(`%c${text}`, style);
         }
-
-        // Context Menu
-
-        const menu = document.querySelector(".context-menu");
-        let menuVisible = false;
-
-        const toggleMenu = command => {
-            menu.style.display = command === "show" ? "block" : "none";
-            menuVisible = !menuVisible;
-        };
-
-        const setPosition = ({
-            top,
-            left
-        }) => {
-            menu.style.left = `${left}px`;
-            menu.style.top = `${top}px`;
-            toggleMenu("show");
-        };
-
-        window.addEventListener("mousedown", e => {
-            if (menuVisible) setTimeout(() => {
-                toggleMenu("hide")
-            }, 50);;
-        });
-
-        window.addEventListener("contextmenu", e => {
-            e.preventDefault();
-            document.querySelector(".menu-options").innerHTML = ""
-
-            document.querySelector(".menu-options").insertAdjacentHTML("beforeend", `
-                <li class="menu-option onhover shadow" context-action="history-back">Back</li>
-                <li class="menu-option onhover shadow" context-action="reload">Reload</li>
-            `)
-
-            const origin = {
-                left: e.pageX,
-                top: e.pageY
-            };
-            setPosition(origin);
-
-            if (e.target.classList.contains("dm")) { // check if object right clicked is a dm 😎
-                for (i = 0; i < e.target.children.length; i++) {
-                    if (e.target.children[i].nodeName == "DATALIST") { // get the datalist from inside the dm
-                        document.querySelector(".menu-options").insertAdjacentHTML("beforeend", `
-                            <li class="menu-option onhover shadow" onmousedown="delete_dm('${e.target.children[i].innerHTML}')">Delete</li>
-                        `)
-                    }
-                }
-            }
-
-            attribute("context-action", "reload").addEventListener('mousedown', () => {
-                window.location.reload()
-            })
-
-            attribute("context-action", "history-back").addEventListener('mousedown', () => {
-                window.history.back()
-            })
-
-            return false;
-        });
     </script>
 </body>
 
