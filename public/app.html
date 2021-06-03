@@ -17,7 +17,7 @@
 
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-    <link rel="shortcut icon" type="image/jpg" href="src/dispute_favicon.svg" />
+    <link rel="shortcut icon" type="image/svg" href="src/dispute_favicon.svg" />
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
@@ -249,13 +249,15 @@
                 let id = window.location.search.slice(1)
 
                 if (id) {
-                    console.log("checked invite")
                     db.collection("servers").get().then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
                             let data = doc.data()
                             let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
 
-                            if (doc_code == id) {
+                            console.log(id, doc_code)
+
+                            if (id == doc_code) {
+                                console.log("match")
                                 if (!data.users.includes(user.uid)) {
                                     data.users.push(user.uid)
                                     db.collection("servers").doc(doc.id).set(data).then(() => {
