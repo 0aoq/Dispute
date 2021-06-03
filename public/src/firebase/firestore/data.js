@@ -24,109 +24,113 @@ function switch_server(server) {
 
 auth.onAuthStateChanged((user) => {
     if (user) {
-        db.collection("users").doc(user.uid).get().then((doc) => {
-            if (!doc.exists) {
-                db.collection("users").doc("info").get().then((_doc) => {
-                    db.collection("users").doc(user.uid).set({
-                        friends: [],
-                        userId: _doc.data().total,
-                        name: user.displayName
-                    }).then((doc) => {
-                        log("Written user profile!", console_styles.success)
+        if (document.getElementById("page").innerHTML === "servers") {
+            db.collection("users").doc(user.uid).get().then((doc) => {
+                if (!doc.exists) {
+                    db.collection("users").doc("info").get().then((_doc) => {
+                        db.collection("users").doc(user.uid).set({
+                            friends: [],
+                            userId: _doc.data().total,
+                            name: user.displayName,
+                            about: window.localStorage.getItem("user__profileInfo_localSave:about")
+                        }).then((doc) => {
+                            log("Written user profile!", console_styles.success)
 
-                        // updated total site users
+                            // updated total site users
 
-                        let _data = _doc.data()
-                        _data.total += 1
+                            let _data = _doc.data()
+                            _data.total += 1
 
-                        db.collection("users").doc("info").set(_data)
+                            db.collection("users").doc("info").set(_data)
+                            window.localStorage.setItem("user__profileInfo_localSave:about", "")
+                        })
                     })
-                })
-            }
-        })
-
-        // Server Joining
-        const join_server_form = document.getElementById("join_server_form")
-
-        join_server_form.addEventListener('submit', e => {
-            e.preventDefault()
-
-            db.collection("servers").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data()
-                    let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
-
-                    if (doc_code == join_server_form.servercode.value) {
-                        if (datapoint != user.uid) {
-                            data.users.push(user.uid)
-                            db.collection("servers").doc(doc.id).set(data).then(() => {
-                                console.log("Written data.")
-                            }).catch(error => {
-                                console.log(error)
-                            })
-                        } else {
-                            alert("You are already in the requested server.")
-                        }
-                    }
-                })
+                }
             })
-        })
 
-        db.collection("servers")
-            .onSnapshot((querySnapshot) => {
-                document.getElementById("servers_list").innerHTML = ""
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data()
+            // Server Joining
+            const join_server_form = document.getElementById("join_server_form")
 
-                    let code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
-                    if (doc.id.split("!:DISPUTE_SERVER::GET::!?")[2] == null) {
-                        for (datapoint of data.users) {
-                            if (datapoint == user.uid) { // is the user in the server? uid is unique, displayName isn't.
-                                document.getElementById("servers_list").insertAdjacentHTML("beforeend", `
-                                    <a style="background-image: url(); background: rgb(73, 96, 114); margin: 0; font-size: 1.5vh" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
-                                `)
+            join_server_form.addEventListener('submit', e => {
+                e.preventDefault()
+
+                db.collection("servers").get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        let data = doc.data()
+                        let doc_code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
+
+                        if (doc_code == join_server_form.servercode.value) {
+                            if (datapoint != user.uid) {
+                                data.users.push(user.uid)
+                                db.collection("servers").doc(doc.id).set(data).then(() => {
+                                    console.log("Written data.")
+                                }).catch(error => {
+                                    console.log(error)
+                                })
+                            } else {
+                                alert("You are already in the requested server.")
                             }
                         }
-                    }
+                    })
                 })
             })
 
-        // Server Creation
+            // Server Creation
 
-        const new_server_form = document.getElementById("new_server_form")
+            const new_server_form = document.getElementById("new_server_form")
 
-        new_server_form.addEventListener('submit', e => {
-            e.preventDefault()
+            new_server_form.addEventListener('submit', e => {
+                e.preventDefault()
 
-            let new_server_name = new_server_form.servername.value + "!:DISPUTE_SERVER::GET::!?" + getString(12)
-            db.collection("servers").doc(new_server_name).set({
-                owner: user.uid,
-                channels: [],
-                users: [
-                    user.uid
-                ]
-            }).then(() => {
-                console.log("Server created.")
-            }).catch(error => {
-                console.log(error)
+                let new_server_name = new_server_form.servername.value + "!:DISPUTE_SERVER::GET::!?" + getString(12)
+                db.collection("servers").doc(new_server_name).set({
+                    owner: user.uid,
+                    channels: [],
+                    users: [
+                        user.uid
+                    ]
+                }).then(() => {
+                    console.log("Server created.")
+                }).catch(error => {
+                    console.log(error)
+                })
+
+                db.collection("servers").doc(new_server_name).collection("general").doc("info").set({
+                    total_msgs: 0
+                }).then(() => {
+                    window.localStorage.setItem("current_server", new_server_name)
+                    window.localStorage.setItem("current_channel", "general")
+                    window.location.reload()
+                }).catch(erorr => {
+                    console.log(erorr)
+                })
+
+                db.collection("servers").doc(new_server_name).collection("general").doc("messages").set({}).then(() => {
+                    log("Channel creation success.", console_styles.success)
+                }).catch(erorr => {
+                    console.log(erorr)
+                })
             })
 
-            db.collection("servers").doc(new_server_name).collection("general").doc("info").set({
-                total_msgs: 0
-            }).then(() => {
-                window.localStorage.setItem("current_server", new_server_name)
-                window.localStorage.setItem("current_channel", "general")
-                window.location.reload()
-            }).catch(erorr => {
-                console.log(erorr)
-            })
+            db.collection("servers")
+                .onSnapshot((querySnapshot) => {
+                    document.getElementById("servers_list").innerHTML = ""
+                    querySnapshot.forEach((doc) => {
+                        let data = doc.data()
 
-            db.collection("servers").doc(new_server_name).collection("general").doc("messages").set({}).then(() => {
-                log("Channel creation success.", console_styles.success)
-            }).catch(erorr => {
-                console.log(erorr)
-            })
-        })
+                        let code = doc.id.split("!:DISPUTE_SERVER::GET::!?")[1]
+                        if (doc.id.split("!:DISPUTE_SERVER::GET::!?")[2] == null) {
+                            for (datapoint of data.users) {
+                                if (datapoint == user.uid) { // is the user in the server? uid is unique, displayName isn't.
+                                    document.getElementById("servers_list").insertAdjacentHTML("beforeend", `
+                                    <a style="background-image: url(); background: rgb(73, 96, 114); margin: 0; font-size: 1.5vh" class="server_icon" onclick="switch_server('${doc.id}')">${doc.id.split("!:DISPUTE_SERVER::GET::!?")[0]}</a>
+                                `)
+                                }
+                            }
+                        }
+                    })
+                })
+        }
 
         if (!window.localStorage.getItem("current_dm") != "") {
             if (document.getElementById("page").innerHTML == "servers" && window.localStorage.getItem("current_channel") && window.localStorage.getItem("current_server")) {
