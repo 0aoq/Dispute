@@ -50,7 +50,9 @@ auth.onAuthStateChanged((user) => {
                     })
                 })
 
-                bioform.reset()
+                setTimeout(() => {
+                    bioform.reset()
+                }, 500);
             })
 
             let nameform = document.getElementById("change_name_form")
@@ -78,7 +80,9 @@ auth.onAuthStateChanged((user) => {
                     displayName: nameform.name.value
                 })
 
-                nameform.reset()
+                setTimeout(() => {
+                    nameform.reset()
+                }, 500);
             })
         }
     }
