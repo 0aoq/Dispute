@@ -329,3 +329,28 @@ h5 {
 span {
     font-size: 1.8vh;
 }
+
+
+/* Detailts */
+
+details summary {
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    user-select: none;
+    margin-top: 1.2rem;
+    padding: 1rem 1.2rem;
+    border-radius: 0.2rem;
+    background: #e24141;
+    color: white;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+details summary:hover {
+    background: #c53838;
+}
+
+details[open] summary {
+    background: #be3636;
+}
