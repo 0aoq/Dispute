@@ -43,41 +43,45 @@ auth.onAuthStateChanged((user) => {
 
             feather.replace()
 
-            db.collection("directMessages")
-                .onSnapshot((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        document.getElementById("channels").innerHTML = ""
-                        document.getElementById("channels").insertAdjacentHTML("beforeend", `
+            db.collection("users").doc(user.uid).get().then((doc) => {
+                let data = doc.data()
+                db.collection("directMessages")
+                    .onSnapshot((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            document.getElementById("channels").innerHTML = ""
+                            document.getElementById("channels").insertAdjacentHTML("beforeend", `
                             <a style="display: flex;" class="channel" onclick="open_modal('dm_modal')">
                                 <i data-feather="plus-square" style="margin-right: 10px;"></i> New DM
                             </a> 
                         `)
 
-                        let dm_user_1 = doc.id.split(", ")[0]
-                        let dm_user_2 = doc.id.split(", ")[1]
+                            let dm_user_1 = doc.id.split(", ")[0]
+                            let dm_user_2 = doc.id.split(", ")[1]
 
-                        let dm_userName_1 = doc.id.split(", ")[2]
-                        let dm_userName_2 = doc.id.split(", ")[3]
+                            let dm_userName_1 = doc.id.split(", ")[2]
+                            let dm_userName_2 = doc.id.split(", ")[3]
 
-                        if (user.uid == dm_user_1) {
-                            document.getElementById("channels").insertAdjacentHTML("beforeend", `
+                            if (data.userId == dm_user_1) {
+                                document.getElementById("channels").insertAdjacentHTML("beforeend", `
                                 <a style="display: flex;" class="channel dm" onclick="switch_dm('${doc.id}')">
                                     <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_2}
                                     <datalist>${doc.id}</datalist>
                                 </a> 
                             `)
-                        } else if (user.uid == dm_user_2) {
-                            document.getElementById("channels").insertAdjacentHTML("beforeend", `
+                            } else if (data.userId == dm_user_2) {
+                                document.getElementById("channels").insertAdjacentHTML("beforeend", `
                                 <a style="display: flex;" class="channel dm" onclick="switch_dm('${doc.id}')">
                                     <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_1}
                                     <datalist>${doc.id}</datalist>
                                 </a> 
                             `)
-                        }
+                            }
 
-                        feather.replace()
+                            feather.replace()
+                        })
                     })
-                })
+            })
+
 
             db.collection("directMessages").doc(window.localStorage.getItem("current_dm"))
                 .onSnapshot((doc) => {
@@ -128,26 +132,30 @@ auth.onAuthStateChanged((user) => {
             document.getElementById("dm_form").addEventListener('submit', e => {
                 e.preventDefault()
 
-                db.collection("users")
-                    .onSnapshot((querySnapshot) => {
-                        querySnapshot.forEach((userProfile) => {
-                            let userData = userProfile.data()
-                            if (userData.userId == document.getElementById("dm_form").userid.value && userProfile.id != user.uid) { // check for the user id
-                                db.collection("directMessages").doc(`${userProfile.id}, ${user.uid}, ${userData.name}, ${user.displayName}`).set({
-                                    profiles: [
-                                        userProfile.id,
-                                        user.uid
-                                    ],
-                                    sent: [],
-                                    total_msgs: 0
-                                }).then(() => {
-                                    log("Created DM.", console_styles.success)
-                                }).catch(error => {
-                                    log(error, console_styles.warning)
-                                })
-                            }
+                db.collection("users").doc(user.uid).get().then((doc) => {
+                    let data = doc.data()
+
+                    db.collection("users")
+                        .onSnapshot((querySnapshot) => {
+                            querySnapshot.forEach((userProfile) => {
+                                let userData = userProfile.data()
+                                if (userData.userId == document.getElementById("dm_form").userid.value && userProfile.id != user.uid && userData.userId != data.userId) { // check for the user id
+                                    db.collection("directMessages").doc(`${userData.userId}, ${data.userId}, ${userData.name}, ${user.displayName}`).set({
+                                        profiles: [
+                                            userProfile.id,
+                                            user.uid
+                                        ],
+                                        sent: [],
+                                        total_msgs: 0
+                                    }).then(() => {
+                                        log("Created DM.", console_styles.success)
+                                    }).catch(error => {
+                                        log(error, console_styles.warning)
+                                    })
+                                }
+                            })
                         })
-                    })
+                })
             })
 
             let user_msgs_allowed = true
