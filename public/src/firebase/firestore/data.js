@@ -225,9 +225,9 @@ auth.onAuthStateChanged((user) => {
                                         // TODO: delete_msg(data.uid, codes)
 
                                         document.getElementById("msgs").insertAdjacentHTML("beforeend", `
-                        
+        
                                             <li class="card message" style="margin-top: 5px; width: 99%; order: ${int};" id='${datapoint.author + ":" + code}'>
-                                                <h5 style="display: inline; user-select: none;">${datapoint.author}</h5>
+                                                <h5 style="display: inline; user-select: none;"><a href="profile.html?${datapoint.author.split("#")[1]}">${datapoint.author.split("#")[0]}</a></h5>
                                                 <span style="margin-left: 20px;">${marked(msg)}</span>
                                             </li>
                                     
@@ -278,46 +278,49 @@ auth.onAuthStateChanged((user) => {
                     e.preventDefault()
 
                     if (message_form.msg.value != "" && message_form.msg.value != " " && message_form.msg.value != null && message_form.msg.value && user_msgs_allowed == true) {
-                        db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).get().then((querySnapshot) => {
-                            querySnapshot.forEach((doc) => {
-                                let data = doc.data()
+                        db.collection("users").doc(user.uid).get().then((userdoc) => {
+                            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).get().then((querySnapshot) => {
+                                querySnapshot.forEach((doc) => {
+                                    let data = doc.data()
 
-                                db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").get().then((_doc) => {
-                                    let _data = _doc.data()
-                                    log("Working.")
+                                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").get().then((_doc) => {
+                                        let _data = _doc.data()
+                                        log("Working.")
 
-                                    if (doc.id == "messages") {
-                                        user_msgs_allowed = false
+                                        if (doc.id == "messages") {
+                                            user_msgs_allowed = false
 
-                                        data.sent.push({ // message strucutre
-                                            author: user.displayName,
-                                            content: message_form.msg.value,
-                                            token: getString(12),
-                                            order: _data.total_msgs
-                                        })
+                                            let userdata = userdoc.data()
+                                            data.sent.push({ // message strucutre
+                                                author: user.displayName + "#" + userdata.userId,
+                                                content: message_form.msg.value,
+                                                token: getString(12),
+                                                order: _data.total_msgs
+                                            })
 
-                                        db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("messages").set(data).then(() => {
-                                            log("Written data to channel messages.", console_styles.success)
-                                        }).catch((error) => {
-                                            console.log(error)
-                                        })
+                                            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("messages").set(data).then(() => {
+                                                log("Written data to channel messages.", console_styles.success)
+                                            }).catch((error) => {
+                                                console.log(error)
+                                            })
+
+                                            setTimeout(() => {
+                                                user_msgs_allowed = true
+                                            }, 1000);
+                                        }
 
                                         setTimeout(() => {
-                                            user_msgs_allowed = true
-                                        }, 1000);
-                                    }
-
-                                    setTimeout(() => {
-                                        _data.total_msgs = _data.total_msgs + 1
-                                        db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").set(_data)
-                                    }, 100);
-                                })
+                                            _data.total_msgs = _data.total_msgs + 1
+                                            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").set(_data)
+                                        }, 100);
+                                    })
+                                });
                             });
-                        });
+                        })
 
                         setTimeout(() => {
                             message_form.reset()
-                        }, 500);
+                        }, 800);
                     }
                 })
 
