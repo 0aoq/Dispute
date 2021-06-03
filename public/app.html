@@ -156,16 +156,44 @@
         </div>
     </div>
 
-    <div id="settings_modal" class="modal" style="overflow: hidden;">
+    <div id="settings_modal" class="modal" style="overflow: scroll !important">
         <div class="backdrop"></div>
         <div class="modal-content">
             <a class="close" id="settings_modal_close">&times;</a>
-            <br>
-            <form id="signupform" style="width: 100%;">
-                <p style="color: white; text-align: left;">Change Email</p>
-                <input type="email" name="email" autocomplete="off" required>
-                <button>Change</button>
-            </form>
+            <div class="mb-50px">
+                <h2 class="heading">Customize Your Settings</h2>
+                <p class="text small">Change your account settings that were set on account creation. This panel is a work in progress and is not complete.</p>
+            </div>
+
+            <details>
+                <summary class="onhover shadow translate" style="transition: all 0.25s !important;">Edit Username</summary>
+
+                <form id="change_name_form">
+                    <p style="color: white; text-align: left;" class="text small">Edit Username</p>
+                    <input type="text" name="name" autocomplete="off" required maxlength="15">
+                    <button>Edit</button>
+                </form>
+            </details>
+
+            <details>
+                <summary class="onhover shadow translate" style="transition: all 0.25s !important;">Edit Email</summary>
+
+                <form id="change_email_form">
+                    <p style="color: white; text-align: left;" class="text small">Edit Email</p>
+                    <input type="email" name="email" autocomplete="off" required>
+                    <button>Edit</button>
+                </form>
+            </details>
+
+            <details>
+                <summary class="onhover shadow translate" style="transition: all 0.25s !important;">Edit About Me (BETA)</summary>
+
+                <form id="change_bio_form">
+                    <p style="color: white; text-align: left;" class="text small">Edit About Me</p>
+                    <textarea name="about" cols="30" rows="3" placeholder="Write a short bio about yourself.. 380 characters max." maxlength="380" style="resize: none;"></textarea>
+                    <button>Edit</button>
+                </form>
+            </details>
         </div>
     </div>
 
@@ -175,6 +203,7 @@
     <script src="src/firebase/users/auth.js"></script>
     <script src="src/firebase/firestore/data.js"></script>
     <script src="src/firebase/firestore/directmessage.js"></script>t
+    <script src="src/firebase/firestore/users.js"></script>
 
     <script>
         feather.replace();
@@ -344,6 +373,21 @@
 
             return false;
         });
+
+        // Details
+
+        let details = document.querySelectorAll("details");
+        for (let i = 0, len = details.length; i < len; i++) {
+            details[i].addEventListener('toggle', function(event) {
+                if (!event.target.open) return;
+                let dropdowns = document.body.querySelectorAll('details[open]');
+                for (let v = 0, len = dropdowns.length; v < len; v++) {
+                    if (dropdowns[v] != details[i]) {
+                        dropdowns[v].removeAttribute('open');
+                    }
+                }
+            }, true);
+        }
     </script>
 </body>
 
