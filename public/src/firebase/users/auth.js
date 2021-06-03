@@ -17,8 +17,10 @@ if (document.getElementById("page").innerHTML == "auth") {
         const email = document.getElementById("signupform").email.value
         const password = document.getElementById("signupform").password.value
         const username = document.getElementById("signupform").username.value
+        const about = document.getElementById("signupform").about.value
 
         auth.createUserWithEmailAndPassword(email, password).then(function(result) {
+                window.localStorage.setItem("user__profileInfo_localSave:about", about)
                 return result.user.updateProfile({
                     displayName: username
                 })
