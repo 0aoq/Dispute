@@ -15,14 +15,31 @@ auth.onAuthStateChanged((user) => {
                             let data = doc.data()
 
                             if (data.userId == id) {
-                                document.querySelector(".card").classList.add("wd-full") // Make box expand to full, looks bad on just the button version
-                                document.querySelector(".card").innerHTML = `
-                                <h1 class="heading">${data.name}</h1>
-                                <h2 class="text">ID: ${data.userId}</h2>
-                                <br>
-                                <p class="text small"><b>About Me:</b></p>
-                                <p class="text small">${marked(data.about)}</p>
-                            `
+                                document.querySelector(".container-2").innerHTML = `
+                                    <div class="container-xl flex flex-just-center mar-lr-auto">
+                                        <div class="card box-shadow onhover wd-full mb-25px" style="background: white !important;">
+                                            <h1 class="heading" style="margin: 0;">${data.name}</h1>
+                                            <p class="text" style="margin: 0;">ID: ${data.userId}</p>
+
+                                            <br>
+                                            <p class="text small">${marked(data.about)}</p>
+
+                                            <br>
+                                            <br>
+                                            <div class="flex" style="gap: 1rem;" id="profile_badges"></div>
+                                        </div>
+                                    </div>
+                                `
+
+                                for (badge of data.badges) {
+                                    document.querySelector("#profile_badges").innerHTML += `
+                                        <div class="card onhover translate shadow maxcontent">
+                                            <h2 class="text-small">${badge}</h2>
+                                        </div>
+                                    `
+                                }
+
+                                document.title = data.name + " - Dispute"
                             }
                         }
                     })
