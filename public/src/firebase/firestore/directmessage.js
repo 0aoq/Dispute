@@ -106,7 +106,7 @@ auth.onAuthStateChanged((user) => {
                             document.getElementById("msgs").insertAdjacentHTML("beforeend", `
         
                                 <li class="card message" style="margin-top: 5px; width: 99%; order: ${int};" id='${datapoint.author + ":" + code}'>
-                                    <h5 style="display: inline; user-select: none;">${datapoint.author}</h5>
+                                    <h5 style="display: inline; user-select: none;"><a href="profile.html?${datapoint.author.split("#")[1]}">${datapoint.author.split("#")[0]}</a></h5>
                                     <span style="margin-left: 20px;">${marked(msg)}</span>
                                 </li>
                         
@@ -163,28 +163,31 @@ auth.onAuthStateChanged((user) => {
                 e.preventDefault()
 
                 if (message_form.msg.value != "" && message_form.msg.value != " " && message_form.msg.value != null && message_form.msg.value && user_msgs_allowed == true) {
-                    db.collection("directMessages").doc(window.localStorage.getItem("current_dm")).get().then((doc) => {
-                        let data = doc.data()
+                    db.collection("users").doc(user.uid).get().then((userdoc) => {
+                        db.collection("directMessages").doc(window.localStorage.getItem("current_dm")).get().then((doc) => {
+                            let data = doc.data()
 
-                        user_msgs_allowed = false
+                            user_msgs_allowed = false
 
-                        data.sent.push({ // message strucutre
-                            author: user.displayName,
-                            content: message_form.msg.value,
-                            token: getString(12),
-                            order: data.total_msgs
-                        })
+                            let userdata = userdoc.data()
+                            data.sent.push({ // message strucutre
+                                author: user.displayName + "#" + userdata.userId,
+                                content: message_form.msg.value,
+                                token: getString(12),
+                                order: data.total_msgs
+                            })
 
-                        db.collection("directMessages").doc(window.localStorage.getItem("current_dm")).set(data).then(() => {
-                            log("Written message to DM.", console_styles.success)
-                        }).catch((error) => {
-                            console.log(error)
-                        })
+                            db.collection("directMessages").doc(window.localStorage.getItem("current_dm")).set(data).then(() => {
+                                log("Written message to DM.", console_styles.success)
+                            }).catch((error) => {
+                                console.log(error)
+                            })
 
-                        setTimeout(() => {
-                            user_msgs_allowed = true
-                        }, 1000);
-                    });
+                            setTimeout(() => {
+                                user_msgs_allowed = true
+                            }, 1000);
+                        });
+                    })
 
                     setTimeout(() => {
                         message_form.reset()
