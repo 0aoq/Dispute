@@ -22,7 +22,7 @@
     <div class="container fixed" id="signup" style="text-align: center;">
         <p style="color: #ff4747; font-size: 6vh; font-weight: 600; margin: 0; text-align: center;">Sign Up</p>
         <form id="signupform" style="width: 100%;">
-            <p style="color: white; text-align: left;">Username</p>
+            <p style="color: white; text-align: left;" maxlength="15">Username</p>
             <input type="text" name="username" autocomplete="off">
 
             <p style="color: white; text-align: left;">Email</p>
@@ -30,6 +30,9 @@
 
             <p style="color: white; text-align: left;">Password</p>
             <input type="password" name="password" autocomplete="off">
+
+            <p style="color: white; text-align: left;">About</p>
+            <textarea name="about" cols="30" rows="3" placeholder="Write a short bio about yourself.. 380 characters max." maxlength="380" style="resize: none;"></textarea>
 
             <br>
             <button>Sign Up</button>
