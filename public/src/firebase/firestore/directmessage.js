@@ -54,6 +54,7 @@ auth.onAuthStateChanged((user) => {
                         `)
 
                         let dm_user_1 = doc.id.split(", ")[0]
+                        let dm_user_2 = doc.id.split(", ")[1]
 
                         let dm_userName_1 = doc.id.split(", ")[2]
                         let dm_userName_2 = doc.id.split(", ")[3]
@@ -65,7 +66,7 @@ auth.onAuthStateChanged((user) => {
                                     <datalist>${doc.id}</datalist>
                                 </a> 
                             `)
-                        } else {
+                        } else if (user.uid == dm_user_2) {
                             document.getElementById("channels").insertAdjacentHTML("beforeend", `
                                 <a style="display: flex;" class="channel dm" onclick="switch_dm('${doc.id}')">
                                     <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_1}
