@@ -24,6 +24,22 @@ function switch_server(server) {
 
 auth.onAuthStateChanged((user) => {
     if (user) {
+        /*
+            db.collection(window.localStorage.get("current_server")).get().then((doc) => {
+                let data = doc.data()
+        
+                if (data.owner == user.uid) {
+                    db.collection("users").get().then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            if (doc.userId == userId) {
+                                // delete in here
+                            }
+                        })
+                    })
+                }
+            })
+        */
+
         if (document.getElementById("page").innerHTML === "servers") {
             db.collection("users").doc(user.uid).get().then((doc) => {
                 if (!doc.exists) {
@@ -163,7 +179,11 @@ auth.onAuthStateChanged((user) => {
                 db.collection("servers").doc(window.localStorage.getItem("current_server"))
                     .onSnapshot((doc) => {
                         let data = doc.data()
-                        document.getElementById("channels").innerHTML = ""
+                        document.getElementById("channels").innerHTML = `
+                            <a style="display: flex;" class="channel" onclick="open_modal('server_users_modal')">
+                                <i data-feather="users" style="margin-right: 10px;"></i> View Users
+                            </a> 
+                        `
 
                         for (datapoint of data.channels) {
                             let channel_name = datapoint.split("!:DISPUTE_CHANNEL::GET::!?")[0]
@@ -193,6 +213,23 @@ auth.onAuthStateChanged((user) => {
 
                                 feather.replace()
                             }
+                        }
+
+                        for (datapoint of data.users) {
+                            db.collection("users").doc(datapoint).get().then((userdoc) => {
+                                let userdata = userdoc.data()
+
+                                document.getElementById("server_users_list").insertAdjacentHTML('beforeend', `
+                                    <details>
+                                        <summary class="onhover shadow translate" style="transition: all 0.25s !important;">${userdata.name}</summary>
+                        
+                                        <div>
+                                            <button class="wd-1-3rd" onclick="window.location = 'profile.html?${userdata.userId}'">Full profile</button>
+                                            <button class="wd-1-3rd disabled" onclick="alert('Error: Action declined: beta feature, missing permissions.')">Remove</button>
+                                        </div>
+                                    </details>
+                                `)
+                            })
                         }
                     })
 
