@@ -43,38 +43,48 @@ auth.onAuthStateChanged((user) => {
 
             feather.replace()
 
-            db.collection("users").doc(user.uid).get().then((doc) => {
-                let data = doc.data()
+            db.collection("users").doc(user.uid).get().then((userdoc) => {
+                let data = userdoc.data()
+
+                document.getElementById("channels").innerHTML = ""
+                document.getElementById("channels").insertAdjacentHTML("beforeend", `
+                    <a style="display: flex;" class="channel" onclick="open_modal('dm_modal')">
+                        <i data-feather="plus-square" style="margin-right: 10px;"></i> New DM
+                    </a> 
+                `)
+
                 db.collection("directMessages")
                     .onSnapshot((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
-                            document.getElementById("channels").innerHTML = ""
-                            document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                            <a style="display: flex;" class="channel" onclick="open_modal('dm_modal')">
-                                <i data-feather="plus-square" style="margin-right: 10px;"></i> New DM
-                            </a> 
-                        `)
+                            for (datapoint of doc.data().profiles) {
+                                if (datapoint == user.uid) {
+                                    let dm_user_1 = doc.id.split(", ")[0]
+                                    let dm_user_2 = doc.id.split(", ")[1]
 
-                            let dm_user_1 = doc.id.split(", ")[0]
-                            let dm_user_2 = doc.id.split(", ")[1]
+                                    let dm_userName_1 = doc.id.split(", ")[2]
+                                    let dm_userName_2 = doc.id.split(", ")[3]
 
-                            let dm_userName_1 = doc.id.split(", ")[2]
-                            let dm_userName_2 = doc.id.split(", ")[3]
+                                    console.log(dm_userName_1, dm_userName_2)
 
-                            if (data.userId == dm_user_1) {
-                                document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                                <a style="display: flex;" class="channel dm" onclick="switch_dm('${doc.id}')">
-                                    <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_2}
-                                    <datalist>${doc.id}</datalist>
-                                </a> 
-                            `)
-                            } else if (data.userId == dm_user_2) {
-                                document.getElementById("channels").insertAdjacentHTML("beforeend", `
-                                <a style="display: flex;" class="channel dm" onclick="switch_dm('${doc.id}')">
-                                    <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_1}
-                                    <datalist>${doc.id}</datalist>
-                                </a> 
-                            `)
+
+                                    if (!document.getElementById(`${dm_userName_1},${dm_userName_2}`)) {
+                                        if (data.userId == dm_user_1) {
+                                            document.getElementById("channels").innerHTML += `
+                                                <a style="display: flex;" class="channel dm" onclick="switch_dm('${doc.id}')" id="${dm_userName_1},${dm_userName_2}">
+                                                    <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_2}
+                                                    <datalist>${doc.id}</datalist>
+                                                </a> 
+                                            `
+                                        } else if (data.userId == dm_user_2) {
+                                            document.getElementById("channels").innerHTML += `
+                                                <a style="display: flex;" class="channel dm" onclick="switch_dm('${doc.id}')" id="${dm_userName_1},${dm_userName_2}">
+                                                    <i data-feather="user" style="margin-right: 10px;"></i> ${dm_userName_1}
+                                                    <datalist>${doc.id}</datalist>
+                                                </a> 
+                                            `
+                                        }
+                                    }
+                                }
                             }
 
                             feather.replace()
@@ -100,6 +110,9 @@ auth.onAuthStateChanged((user) => {
                             msg = msg.replaceAll('### ', "")
                             msg = msg.replaceAll('#### ', "")
                             msg = msg.replaceAll('##### ', "")
+
+                            msg = DOMPurify.sanitize(msg)
+                            log("Sanitized message.", console_styles.success)
 
                             // TODO: delete_msg(data.uid, codes)
 
@@ -162,32 +175,35 @@ auth.onAuthStateChanged((user) => {
             message_form.addEventListener('submit', e => {
                 e.preventDefault()
 
-                if (message_form.msg.value != "" && message_form.msg.value != " " && message_form.msg.value != null && message_form.msg.value && user_msgs_allowed == true) {
-                    db.collection("users").doc(user.uid).get().then((userdoc) => {
-                        db.collection("directMessages").doc(window.localStorage.getItem("current_dm")).get().then((doc) => {
-                            let data = doc.data()
+                if (message_form.msg.value && user_msgs_allowed == true) {
+                    let message = $.trim(message_form.msg.value)
+                    if (message.length !== 0) {
+                        db.collection("users").doc(user.uid).get().then((userdoc) => {
+                            db.collection("directMessages").doc(window.localStorage.getItem("current_dm")).get().then((doc) => {
+                                let data = doc.data()
 
-                            user_msgs_allowed = false
+                                user_msgs_allowed = false
 
-                            let userdata = userdoc.data()
-                            data.sent.push({ // message strucutre
-                                author: user.displayName + "#" + userdata.userId,
-                                content: message_form.msg.value,
-                                token: getString(12),
-                                order: data.total_msgs
-                            })
+                                let userdata = userdoc.data()
+                                data.sent.push({ // message strucutre
+                                    author: user.displayName + "#" + userdata.userId,
+                                    content: message_form.msg.value,
+                                    token: getString(12),
+                                    order: data.total_msgs
+                                })
 
-                            db.collection("directMessages").doc(window.localStorage.getItem("current_dm")).set(data).then(() => {
-                                log("Written message to DM.", console_styles.success)
-                            }).catch((error) => {
-                                console.log(error)
-                            })
+                                db.collection("directMessages").doc(window.localStorage.getItem("current_dm")).set(data).then(() => {
+                                    log("Written message to DM.", console_styles.success)
+                                }).catch((error) => {
+                                    console.log(error)
+                                })
 
-                            setTimeout(() => {
-                                user_msgs_allowed = true
-                            }, 1000);
-                        });
-                    })
+                                setTimeout(() => {
+                                    user_msgs_allowed = true
+                                }, 1000);
+                            });
+                        })
+                    }
 
                     setTimeout(() => {
                         message_form.reset()
