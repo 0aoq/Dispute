@@ -3,8 +3,8 @@
 Dispute is an open source, realtime messaging service that supports messaging within servers/channels, as well as direct messages with users.
 
 Dispute uses open source projects such as the following:
-- marked.js (see line 32 of [app.html](https://github.com/0aoq/Dispute/blob/main/public/app.html))
-- DOMPurify (/src/purify.min.js, see line 33 [app.html](https://github.com/0aoq/Dispute/blob/main/public/app.html))
+- [marked.js](https://marked.js.org/) (see line 32 of [app.html](https://github.com/0aoq/Dispute/blob/main/public/app.html))
+- [DOMPurify](https://github.com/cure53/DOMPurify) (/src/purify.min.js, see line 33 [app.html](https://github.com/0aoq/Dispute/blob/main/public/app.html))
 
 to operate properly.
 
