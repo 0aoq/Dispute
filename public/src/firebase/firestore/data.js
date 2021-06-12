@@ -314,46 +314,49 @@ auth.onAuthStateChanged((user) => {
                 message_form.addEventListener('submit', e => {
                     e.preventDefault()
 
-                    if (message_form.msg.value != "" && message_form.msg.value != " " && message_form.msg.value != null && message_form.msg.value && user_msgs_allowed == true) {
-                        db.collection("users").doc(user.uid).get().then((userdoc) => {
-                            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).get().then((querySnapshot) => {
-                                querySnapshot.forEach((doc) => {
-                                    let data = doc.data()
+                    if (message_form.msg.value && user_msgs_allowed == true) {
+                        let message = $.trim(message_form.msg.value)
+                        if (message.length !== 0) {
+                            db.collection("users").doc(user.uid).get().then((userdoc) => {
+                                db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).get().then((querySnapshot) => {
+                                    querySnapshot.forEach((doc) => {
+                                        let data = doc.data()
 
-                                    db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").get().then((_doc) => {
-                                        let _data = _doc.data()
-                                        log("Working.")
+                                        db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").get().then((_doc) => {
+                                            let _data = _doc.data()
+                                            log("Working.")
 
-                                        if (doc.id == "messages") {
-                                            user_msgs_allowed = false
+                                            if (doc.id == "messages") {
+                                                user_msgs_allowed = false
 
-                                            let userdata = userdoc.data()
-                                            data.sent.push({ // message strucutre
-                                                author: user.displayName + "#" + userdata.userId,
-                                                content: message_form.msg.value,
-                                                token: getString(12),
-                                                order: _data.total_msgs
-                                            })
+                                                let userdata = userdoc.data()
+                                                data.sent.push({ // message strucutre
+                                                    author: user.displayName + "#" + userdata.userId,
+                                                    content: message_form.msg.value,
+                                                    token: getString(12),
+                                                    order: _data.total_msgs
+                                                })
 
-                                            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("messages").set(data).then(() => {
-                                                log("Written data to channel messages.", console_styles.success)
-                                            }).catch((error) => {
-                                                console.log(error)
-                                            })
+                                                db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("messages").set(data).then(() => {
+                                                    log("Written data to channel messages.", console_styles.success)
+                                                }).catch((error) => {
+                                                    console.log(error)
+                                                })
+
+                                                setTimeout(() => {
+                                                    user_msgs_allowed = true
+                                                }, 1000);
+                                            }
 
                                             setTimeout(() => {
-                                                user_msgs_allowed = true
-                                            }, 1000);
-                                        }
-
-                                        setTimeout(() => {
-                                            _data.total_msgs = _data.total_msgs + 1
-                                            db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").set(_data)
-                                        }, 100);
-                                    })
+                                                _data.total_msgs = _data.total_msgs + 1
+                                                db.collection(`servers/${window.localStorage.getItem("current_server")}/${window.localStorage.getItem("current_channel")}`).doc("info").set(_data)
+                                            }, 100);
+                                        })
+                                    });
                                 });
-                            });
-                        })
+                            })
+                        }
 
                         setTimeout(() => {
                             message_form.reset()
