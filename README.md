@@ -1,7 +1,15 @@
 # 🦜 Dispute
 
-Open source work in progress site similar to discord. Dispute currently supports servers and server creation, channels and channel creation, and messages.
-Dispute uses Firebase to store data and authenticate.
+Dispute is an open source, realtime messaging service that supports messaging within servers/channels, as well as direct messages with users.
+
+Dispute uses open source projects such as the following:
+- marked.js (see line 32 of [app.html](https://github.com/0aoq/Dispute/blob/main/public/app.html))
+- DOMPurify (/src/purify.min.js, see line 33 [app.html](https://github.com/0aoq/Dispute/blob/main/public/app.html))
+
+to operate properly.
+
+Dispute uses firebase for data storage. Firebase is NOT open source, and can be found at https://firebase.google.com
+Dispute is hosted on firebase hosting, which allows for google trackers. Please host yourself on a localhost if you want to minimize trackers.
 
 Need help? Join the main Dispute server with code https://dispute-app.web.app/app?8uoaJxxxpC8r
 
