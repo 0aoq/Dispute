@@ -245,45 +245,74 @@ auth.onAuthStateChanged((user) => {
                                     document.getElementById("messagebox").style.display = "none"
                                 }
 
-                                for (datapoint of data.sent) {
-                                    let msg = datapoint.content
-                                    let code = datapoint.token
-                                    let int = datapoint.order
-                                    if (!document.getElementById(datapoint.author + ":" + code)) {
-                                        // fix md
-                                        msg = msg.replaceAll('"', "&quot;") // replace quotes because they used to break stuff
+                                document.getElementById("msgs").innerHTML = ""
 
-                                        msg = msg.replaceAll('# ', "")
-                                        msg = msg.replaceAll('## ', "")
-                                        msg = msg.replaceAll('### ', "")
-                                        msg = msg.replaceAll('#### ', "")
-                                        msg = msg.replaceAll('##### ', "")
+                                let array = data.sent.slice(data.sent.length - 7, data.sent.length)
 
-                                        // TODO: delete_msg(data.uid, codes)
+                                if (data.sent.length - 7 == null) {
+                                    array = data.sent
+                                }
 
-                                        document.getElementById("msgs").insertAdjacentHTML("beforeend", `
+                                loadmsgs()
+
+                                function loadmsgs() {
+                                    for (datapoint of array) {
+                                        let msg = datapoint.content
+                                        let code = datapoint.token
+                                        let int = datapoint.order
+                                        if (!document.getElementById(datapoint.author + ":" + code)) {
+                                            // fix md
+                                            msg = msg.replaceAll('"', "&quot;") // replace quotes because they used to break stuff
+
+                                            msg = msg.replaceAll('# ', "")
+                                            msg = msg.replaceAll('## ', "")
+                                            msg = msg.replaceAll('### ', "")
+                                            msg = msg.replaceAll('#### ', "")
+                                            msg = msg.replaceAll('##### ', "")
+
+                                            msg = DOMPurify.sanitize(msg)
+                                            log("Sanitized message.", console_styles.success)
+
+                                            // TODO: delete_msg(data.uid, codes)
+
+                                            document.getElementById("msgs").insertAdjacentHTML("beforeend", `
         
-                                            <li class="card message" style="margin-top: 5px; width: 99%; order: ${int};" id='${datapoint.author + ":" + code}'>
-                                                <h5 style="display: inline; user-select: none;"><a href="profile.html?${datapoint.author.split("#")[1]}">${datapoint.author.split("#")[0]}</a></h5>
-                                                <span style="margin-left: 20px;">${marked(msg)}</span>
-                                            </li>
-                                    
-                                        `)
+                                                <li class="message" style="margin-top: 5px; width: 99%; order: ${int};" id='${datapoint.author + ":" + code}'>
+                                                    <h5 style="display: inline; user-select: none;"><a href="profile.html?${datapoint.author.split("#")[1]}">${datapoint.author.split("#")[0]}</a></h5>
+                                                    <span style="margin-left: 20px;">${marked(msg)}</span>
+                                                </li>
+                                        
+                                            `)
 
-                                        let links = document.querySelectorAll("#msgs li a")
-                                        for (var i = 0, len = links.length; i < len; i++) {
-                                            if (!links[i].classList.contains("btn")) {
-                                                links[i].classList.add("btn")
+                                            let links = document.querySelectorAll("#msgs li a")
+                                            for (var i = 0, len = links.length; i < len; i++) {
+                                                if (!links[i].classList.contains("btn")) {
+                                                    links[i].classList.add("btn")
+                                                }
                                             }
-                                        }
 
-                                        let p = document.querySelectorAll("#msgs li p")
-                                        for (var i = 0, len = p.length; i < len; i++) {
-                                            p[i].style.display = "inline"
-                                        }
+                                            let p = document.querySelectorAll("#msgs li p")
+                                            for (var i = 0, len = p.length; i < len; i++) {
+                                                p[i].style.display = "inline"
+                                            }
 
-                                        $("#msgs").animate({ scrollTop: $('#msgs').prop("scrollHeight") }, 1000);
+                                            $("#msgs").animate({ scrollTop: $('#msgs').prop("scrollHeight") }, 1000);
+                                        }
                                     }
+
+                                    document.getElementById("msgs").insertAdjacentHTML("beforeend", `
+        
+                                        <li class="message" style="margin-top: 5px; width: 99%; order: 1;">
+                                            <span><a class="btn" id='system_msg_load_all'>Load all messages</a> (may cause scrolling issues)</span>
+                                        </li>
+                                        
+                                    `)
+
+                                    document.getElementById('system_msg_load_all').addEventListener('click', () => {
+                                        array = data.sent
+                                        loadmsgs()
+                                        document.getElementById('system_msg_load_all').remove()
+                                    })
                                 }
                             } else {
                                 for (datapoint of data.rules) { // if the doc is info, check the channel info rules
