@@ -1,3 +1,5 @@
+**I am no longer going to maintain this repository**, Dispute will no longer receive any updates from this repository, and it is now archived. Thanks!
+
 # 🦜 Dispute
 
 Dispute is an open source, realtime messaging service that supports messaging within servers/channels, as well as direct messages with users.
